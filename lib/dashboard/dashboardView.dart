@@ -1,5 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../LoginRegister/Controlller/SignInUpController.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,23 +30,25 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(fontSize: 14.0, color: Color(0xFF555555)),
         ),
       ),
-      home: const HomeScreen(),
+      home: const dashboardView(),
     );
   }
 }
 
 // Home screen of the application
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class dashboardView extends StatefulWidget {
+  const dashboardView({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<dashboardView> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
+class _HomeScreenState extends State<dashboardView>
+
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  final authC = Get.find<SignInUpController>();
   final TextEditingController _searchController = TextEditingController();
   int _selectedIndex = 1; // Start on the "Shop" tab
 
@@ -375,8 +381,9 @@ class _HomeScreenState extends State<HomeScreen>
 
 // Card for featured products
 class FeaturedProductCard extends StatelessWidget {
+  final authC = Get.find<SignInUpController>();
   final Map<String, String> item;
-  const FeaturedProductCard({super.key, required this.item});
+  FeaturedProductCard({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -430,7 +437,9 @@ class FeaturedProductCard extends StatelessWidget {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: (){
+                          authC.signOut();
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           foregroundColor: Colors.white,

@@ -1,31 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project_gemastik/firebase_options.dart';
+import '../../firebase_options.dart';
 import '../Controlller/SignInUpController.dart';
 
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized(); // Required before Firebase.initializeApp()
-  await Firebase.initializeApp( // Await the initialization
-    options: DefaultFirebaseOptions.currentPlatform, // Use the auto-generated options
-  );
-  runApp(Registerview());
-}
-
-class Registerview extends StatelessWidget {
-  final emailC = TextEditingController();
-  final passwordC = TextEditingController();
-  final confirmPasswordC = TextEditingController();
-  final authC = Get.put(SignInUpController(), permanent: true);
+class Registerview extends GetView<SignInUpController> {
+  final loginemailC = TextEditingController();
+  final regisemailC = TextEditingController();
+  final loginpasswordC = TextEditingController();
+  final regispasswordC = TextEditingController();
+  final regisconfirmPasswordC = TextEditingController();
+  final authC = Get.find<SignInUpController>();
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: authC.streamAuthStatus,
-        builder: (context, snapshot) {
-          print(snapshot);
-          if (snapshot.connectionState == ConnectionState.active) {
-            return GetMaterialApp(
-                debugShowCheckedModeBanner: false,
-                home: Scaffold(
+    return Scaffold(
                   appBar: AppBar(
                     toolbarHeight: 159,
                     backgroundColor: Color.fromRGBO(1, 130, 65, 1.0),
@@ -68,7 +55,7 @@ class Registerview extends StatelessWidget {
                                                 fontSize: 20,),),
                                               SizedBox(height: 40,),
                                               TextField(
-                                                controller: emailC,
+                                                controller: loginemailC,
                                                 decoration: InputDecoration(
                                                   border: OutlineInputBorder(),
                                                   labelText: 'Email',
@@ -76,7 +63,7 @@ class Registerview extends StatelessWidget {
                                               ),
                                               SizedBox(height: 20,),
                                               TextField(
-                                                controller: passwordC,
+                                                controller: loginpasswordC,
                                                 obscureText: true,
                                                 decoration: InputDecoration(
                                                   border: OutlineInputBorder(),
@@ -88,8 +75,8 @@ class Registerview extends StatelessWidget {
                                                 width: double.infinity,
                                                 child: TextButton(
                                                   onPressed: () =>
-                                                      authC.signIn(emailC.text,
-                                                          passwordC.text),
+                                                      authC.signIn(loginemailC.text,
+                                                          loginpasswordC.text),
                                                   child: Text("Login",
                                                       style: TextStyle(
                                                           color: Colors.white)),
@@ -115,7 +102,7 @@ class Registerview extends StatelessWidget {
                                               fontSize: 20,),),
                                             SizedBox(height: 40,),
                                             TextField(
-                                              controller: emailC,
+                                              controller: regisemailC,
                                               decoration: InputDecoration(
                                                 border: OutlineInputBorder(),
                                                 labelText: 'Email',
@@ -123,7 +110,7 @@ class Registerview extends StatelessWidget {
                                             ),
                                             SizedBox(height: 20,),
                                             TextField(
-                                              controller: passwordC,
+                                              controller: regispasswordC,
                                               obscureText: true,
                                               decoration: InputDecoration(
                                                 border: OutlineInputBorder(),
@@ -132,7 +119,7 @@ class Registerview extends StatelessWidget {
                                             ),
                                             SizedBox(height: 20,),
                                             TextField(
-                                              controller: confirmPasswordC,
+                                              controller: regisconfirmPasswordC,
                                               obscureText: true,
                                               decoration: InputDecoration(
                                                 border: OutlineInputBorder(),
@@ -143,9 +130,9 @@ class Registerview extends StatelessWidget {
                                             Container(
                                               width: double.infinity,
                                               child: TextButton(
-                                                onPressed: passwordC.text ==
-                                                    confirmPasswordC.text
-                                                    ? () =>authC.signUp(emailC.text,passwordC.text)
+                                                onPressed: regispasswordC.text ==
+                                                    regisconfirmPasswordC.text
+                                                    ? () =>authC.signUp(regisemailC.text,regispasswordC.text)
                                                     : () {
                                                   Get.snackbar("Error",
                                                       "Password tidak sama");
@@ -177,14 +164,7 @@ class Registerview extends StatelessWidget {
                     )
                     ),
                   ),
-                )
-            );
-          }
-          return CircularProgressIndicator();
+                );
 
-        }
-
-
-    );
   }
 }

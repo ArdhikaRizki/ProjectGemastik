@@ -39,5 +39,8 @@ class SignInUpController extends GetxController{
     }
   }
 
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
 
 }
