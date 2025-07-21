@@ -45,17 +45,67 @@ class Registerview extends GetView<SignInUpController> {
                                     // Wrap TabBarView with Expanded
                                     Expanded(
                                       child: TabBarView(children: [
-                                        Column(
+                                        SingleChildScrollView(
+                                          child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment
+                                                  .start,
+                                              children: [
+                                                SizedBox(height: 20,),
+                                                Text("Sign In", style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20,),),
+                                                SizedBox(height: 40,),
+                                                TextField(
+                                                  controller: loginemailC,
+                                                  decoration: InputDecoration(
+                                                    border: OutlineInputBorder(),
+                                                    labelText: 'Email',
+                                                  ),
+                                                ),
+                                                SizedBox(height: 20,),
+                                                TextField(
+                                                  controller: loginpasswordC,
+                                                  obscureText: true,
+                                                  decoration: InputDecoration(
+                                                    border: OutlineInputBorder(),
+                                                    labelText: 'Password',
+                                                  ),
+                                                ),
+                                                SizedBox(height: 20,),
+                                                Container(
+                                                  width: double.infinity,
+                                                  child: TextButton(
+                                                    onPressed: () =>
+                                                        authC.signIn(loginemailC.text,
+                                                            loginpasswordC.text),
+                                                    child: Text("Login",
+                                                        style: TextStyle(
+                                                            color: Colors.white)),
+                                                    style: TextButton.styleFrom(
+                                                      backgroundColor: Color
+                                                          .fromRGBO(
+                                                          1, 130, 65, 1.0),
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius
+                                                            .circular(6),
+                                                      ),
+                                                    ),),
+                                                )
+                                              ]),
+                                        ),
+                                        // Use Center for better visibility
+                                        SingleChildScrollView(
+                                          child: Column(
                                             crossAxisAlignment: CrossAxisAlignment
                                                 .start,
                                             children: [
                                               SizedBox(height: 20,),
-                                              Text("Sign In", style: TextStyle(
+                                              Text("Sign Up", style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20,),),
                                               SizedBox(height: 40,),
                                               TextField(
-                                                controller: loginemailC,
+                                                controller: regisemailC,
                                                 decoration: InputDecoration(
                                                   border: OutlineInputBorder(),
                                                   labelText: 'Email',
@@ -63,7 +113,7 @@ class Registerview extends GetView<SignInUpController> {
                                               ),
                                               SizedBox(height: 20,),
                                               TextField(
-                                                controller: loginpasswordC,
+                                                controller: regispasswordC,
                                                 obscureText: true,
                                                 decoration: InputDecoration(
                                                   border: OutlineInputBorder(),
@@ -71,13 +121,26 @@ class Registerview extends GetView<SignInUpController> {
                                                 ),
                                               ),
                                               SizedBox(height: 20,),
+                                              TextField(
+                                                controller: regisconfirmPasswordC,
+                                                obscureText: true,
+                                                decoration: InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                  labelText: 'Confirm Password',
+                                                ),
+                                              ),
+                                              SizedBox(height: 20,),
                                               Container(
                                                 width: double.infinity,
                                                 child: TextButton(
-                                                  onPressed: () =>
-                                                      authC.signIn(loginemailC.text,
-                                                          loginpasswordC.text),
-                                                  child: Text("Login",
+                                                  onPressed: regispasswordC.text ==
+                                                      regisconfirmPasswordC.text
+                                                      ? () =>authC.signUp(regisemailC.text,regispasswordC.text)
+                                                      : () {
+                                                    Get.snackbar("Error",
+                                                        "Password tidak sama");
+                                                  },
+                                                  child: Text("Register",
                                                       style: TextStyle(
                                                           color: Colors.white)),
                                                   style: TextButton.styleFrom(
@@ -90,67 +153,8 @@ class Registerview extends GetView<SignInUpController> {
                                                     ),
                                                   ),),
                                               )
-                                            ]),
-                                        // Use Center for better visibility
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment
-                                              .start,
-                                          children: [
-                                            SizedBox(height: 20,),
-                                            Text("Sign Up", style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,),),
-                                            SizedBox(height: 40,),
-                                            TextField(
-                                              controller: regisemailC,
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                labelText: 'Email',
-                                              ),
-                                            ),
-                                            SizedBox(height: 20,),
-                                            TextField(
-                                              controller: regispasswordC,
-                                              obscureText: true,
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                labelText: 'Password',
-                                              ),
-                                            ),
-                                            SizedBox(height: 20,),
-                                            TextField(
-                                              controller: regisconfirmPasswordC,
-                                              obscureText: true,
-                                              decoration: InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                labelText: 'Confirm Password',
-                                              ),
-                                            ),
-                                            SizedBox(height: 20,),
-                                            Container(
-                                              width: double.infinity,
-                                              child: TextButton(
-                                                onPressed: regispasswordC.text ==
-                                                    regisconfirmPasswordC.text
-                                                    ? () =>authC.signUp(regisemailC.text,regispasswordC.text)
-                                                    : () {
-                                                  Get.snackbar("Error",
-                                                      "Password tidak sama");
-                                                },
-                                                child: Text("Register",
-                                                    style: TextStyle(
-                                                        color: Colors.white)),
-                                                style: TextButton.styleFrom(
-                                                  backgroundColor: Color
-                                                      .fromRGBO(
-                                                      1, 130, 65, 1.0),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius
-                                                        .circular(6),
-                                                  ),
-                                                ),),
-                                            )
-                                          ],
+                                            ],
+                                          ),
                                         )
                                         // Use Center for better visibility
                                       ]),

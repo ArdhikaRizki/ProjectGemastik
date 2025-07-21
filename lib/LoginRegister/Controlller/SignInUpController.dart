@@ -1,18 +1,29 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_gemastik/LoginRegister/Model/UserModel.dart';
 import 'package:project_gemastik/LoginRegister/View/RegisterView.dart';
 
+
 class SignInUpController extends GetxController{
   FirebaseAuth auth = FirebaseAuth.instance;
+
 
   Stream<User?> get streamAuthStatus => auth.authStateChanges();
 
   Future<void> signUp(String email, String password) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email,
           password: password
+      );
+      await signOut();
+      Get.snackbar(
+        'Success',
+        'Registration successful! Please log in.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -30,6 +41,7 @@ class SignInUpController extends GetxController{
           email: email,
           password: password
       );
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
