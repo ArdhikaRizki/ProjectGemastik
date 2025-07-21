@@ -72,21 +72,116 @@ class _ProductpageviewState extends State<Productpageview> {
                 ],
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Kacang Tanah',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Kacang tanah adalah sumber protein nabati yang kaya akan nutrisi.',
-                textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 16),
-              ),
-            ],
-          ),
-        ),
-      ),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Kacang Tanah",
+                              style: TextStyle(
+                               fontSize: 24,
+                               fontWeight: FontWeight.bold,
+                             ),
+                           ),
+                           Text("Rp. 20.000 /Kg", style: TextStyle(
+                             fontSize: 20,
+                             fontWeight: FontWeight.bold,
+                             color: Colors.green,
+                           ),
+                             textAlign: TextAlign.right,)
+                         ],
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                           height: 220,
+                           width: double.infinity,
+                           child: SingleChildScrollView(
+                             child: Text(
+                               "Kacang tanah adalah tanaman yang menghasilkan biji-bijian yang kaya akan protein dan lemak sehat. Kacang ini sering digunakan dalam berbagai masakan dan camilan. Kacang tanah juga dikenal sebagai sumber energi yang baik dan mengandung berbagai nutrisi penting seperti vitamin E, magnesium, dan folat. Kacang tanah dapat dimakan mentah, direbus, atau digoreng, dan sering digunakan dalam pembuatan selai kacang. Kacang tanah juga memiliki manfaat kesehatan, termasuk meningkatkan kesehatan jantung, mengurangi risiko diabetes tipe 2, dan mendukung kesehatan otak. Namun, penting untuk mengonsumsinya dengan bijak karena kacang tanah juga mengandung kalori yang tinggi.",
+                               style: TextStyle(
+                                 fontSize: 16,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ),
 
+                       SizedBox(height: 20),
+                       Row(
+                         children: [
+                           CircleAvatar(
+                            backgroundImage: NetworkImage('https://assets.promediateknologi.id/crop/0x0:0x0/750x500/webp/photo/2022/11/27/4181532000.jpg'),
+                            radius: 50,
+                           ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Mas Gibran asal Solo",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                const Text(
+                                  "Petani Kacang Tanah",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],)
+                         ],
+                       ),
+                        SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 250,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  // Action for Buy Now button
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                child: const Text("Beli Sekarang", style: TextStyle(fontSize: 16, color: Colors.white)),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Action for Add to Cart button
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: Icon(Icons.shopping_cart, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                ),
+
+            ]
+      ),
+    )
+      )
     );
   }
 }
