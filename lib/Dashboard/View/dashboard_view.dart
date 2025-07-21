@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-import '../LoginRegister/Controlller/SignInUpController.dart';
+import '../../LoginRegister/Controlller/SignInUpController.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const DashboardView());
 }
 
 // Main application widget
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class DashboardView extends StatelessWidget {
+  const DashboardView({super.key});
 
   @override
   Widget build(BuildContext context) {

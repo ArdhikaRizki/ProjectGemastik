@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 
 void main() {
-  runApp(const ProfileApp());
+  runApp(const ProfileView());
 }
 
-class ProfileApp extends StatelessWidget {
-  const ProfileApp({Key? key}) : super(key: key);
+class ProfileView extends StatelessWidget {
+  const ProfileView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

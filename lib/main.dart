@@ -8,7 +8,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:project_gemastik/LoginRegister/Controlller/SignInUpController.dart';
 import 'package:project_gemastik/Routes/route_names.dart';
 import 'package:project_gemastik/Routes/route_pages.dart';
-import 'package:project_gemastik/dashboard/dashboardView.dart';
+import 'package:project_gemastik/Dashboard/View/dashboard_view.dart';
 
 import 'LoginRegister/View/RegisterView.dart';
 
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             title: 'Agri Marketplace',
             getPages: RoutesPage.page,
             // initialRoute: snapshot.data != null ? RouteNames.home : RouteNames.SignInUp,
-            home: snapshot.data != null ? dashboardView() : Registerview(),
+            home: snapshot.data != null /* && !authC.isRegistering.value*/ ? dashboardView() : Registerview(),
           );
         }
         return CircularProgressIndicator();
