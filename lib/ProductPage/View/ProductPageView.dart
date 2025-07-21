@@ -72,90 +72,81 @@ class _ProductpageviewState extends State<Productpageview> {
                 ],
               ),
               const SizedBox(height: 20),
-              Flexible(
-                child: SingleChildScrollView(
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Kacang Tanah",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Kacang Tanah",
+                              style: TextStyle(
+                               fontSize: 24,
+                               fontWeight: FontWeight.bold,
+                             ),
+                           ),
+                           Text("Rp. 20.000 /Kg", style: TextStyle(
+                             fontSize: 20,
+                             fontWeight: FontWeight.bold,
+                             color: Colors.green,
+                           ),
+                             textAlign: TextAlign.right,)
+                         ],
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                           height: 220,
+                           width: double.infinity,
+                           child: SingleChildScrollView(
+                             child: Text(
+                               "Kacang tanah adalah tanaman yang menghasilkan biji-bijian yang kaya akan protein dan lemak sehat. Kacang ini sering digunakan dalam berbagai masakan dan camilan. Kacang tanah juga dikenal sebagai sumber energi yang baik dan mengandung berbagai nutrisi penting seperti vitamin E, magnesium, dan folat. Kacang tanah dapat dimakan mentah, direbus, atau digoreng, dan sering digunakan dalam pembuatan selai kacang. Kacang tanah juga memiliki manfaat kesehatan, termasuk meningkatkan kesehatan jantung, mengurangi risiko diabetes tipe 2, dan mendukung kesehatan otak. Namun, penting untuk mengonsumsinya dengan bijak karena kacang tanah juga mengandung kalori yang tinggi.",
+                               style: TextStyle(
+                                 fontSize: 16,
+                                  color: Colors.grey,
                                 ),
                               ),
-                              Text("Rp. 20.000", style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                              ),
-                                textAlign: TextAlign.right,)
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            "Kacang tanah adalah tanaman yang menghasilkan biji-bijian yang kaya akan protein dan lemak sehat. Kacang ini sering digunakan dalam berbagai masakan dan camilan. Kacang tanah juga dikenal sebagai sumber energi yang baik dan mengandung berbagai nutrisi penting seperti vitamin E, magnesium, dan folat. Kacang tanah dapat dimakan mentah, direbus, atau digoreng, dan sering digunakan dalam pembuatan selai kacang. Kacang tanah juga memiliki manfaat kesehatan, termasuk meningkatkan kesehatan jantung, mengurangi risiko diabetes tipe 2, dan mendukung kesehatan otak. Namun, penting untuk mengonsumsinya dengan bijak karena kacang tanah juga mengandung kalori yang tinggi.",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey,
                             ),
                           ),
-                         SizedBox(height: 20),
-                         Row(
-                           children: [
-                             CircleAvatar(
-                              backgroundImage: NetworkImage('https://instagram.fcgk30-1.fna.fbcdn.net/v/t51.29350-15/364993387_1032284108101815_2803375922758780302_n.webp?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQuaW1hZ2VfdXJsZ2VuLjc1Nng3NTYuc2RyLmYyOTM1MC5kZWZhdWx0X2ltYWdlIn0&_nc_ht=instagram.fcgk30-1.fna.fbcdn.net&_nc_cat=103&_nc_oc=Q6cZ2QHAp8gCSk2lvY0vZBIQwP5_Cy4Gp6UTgIaADABsLMvdMiLgN9pkJrrh3PPc14BR_1M&_nc_ohc=nkYnVXGL3-MQ7kNvwG0NatV&_nc_gid=oloy2UKAeoq04awEZDtkHg&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzE2MTY1MjY1MzMwODgxODA0Nw%3D%3D.3-ccb7-5&oh=00_AfRK6efud9VjMz3jRN4tYq1_aESIHfxMo_fCge401oYP1g&oe=6883B7BB&_nc_sid=10d13b'),
-                              radius: 50,
-                             ),
-                              const SizedBox(width: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Prayatna Ardi Wibisono",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+
+                       SizedBox(height: 20),
+                       Row(
+                         children: [
+                           CircleAvatar(
+                            backgroundImage: NetworkImage('https://instagram.fcgk30-1.fna.fbcdn.net/v/t51.29350-15/364993387_1032284108101815_2803375922758780302_n.webp?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQuaW1hZ2VfdXJsZ2VuLjc1Nng3NTYuc2RyLmYyOTM1MC5kZWZhdWx0X2ltYWdlIn0&_nc_ht=instagram.fcgk30-1.fna.fbcdn.net&_nc_cat=103&_nc_oc=Q6cZ2QHAp8gCSk2lvY0vZBIQwP5_Cy4Gp6UTgIaADABsLMvdMiLgN9pkJrrh3PPc14BR_1M&_nc_ohc=nkYnVXGL3-MQ7kNvwG0NatV&_nc_gid=oloy2UKAeoq04awEZDtkHg&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzE2MTY1MjY1MzMwODgxODA0Nw%3D%3D.3-ccb7-5&oh=00_AfRK6efud9VjMz3jRN4tYq1_aESIHfxMo_fCge401oYP1g&oe=6883B7BB&_nc_sid=10d13b'),
+                            radius: 50,
+                           ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Prayatna Ardi Wibisono",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  const SizedBox(height: 5),
-                                  const Text(
-                                    "Petani Kacang Tanah",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],)
-                           ],
-                         ),
-                          SizedBox(height: 20,),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: 250,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // Action for Buy Now button
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  child: const Text("Beli Sekarang", style: TextStyle(fontSize: 16, color: Colors.white)),
                                 ),
-                              ),
-                              ElevatedButton(
+                                const SizedBox(height: 5),
+                                const Text(
+                                  "Petani Kacang Tanah",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],)
+                         ],
+                       ),
+                        SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 250,
+                              child: ElevatedButton(
                                 onPressed: () {
-                                  // Action for Add to Cart button
+                                  // Action for Buy Now button
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.green,
@@ -164,16 +155,29 @@ class _ProductpageviewState extends State<Productpageview> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
-                                child: Icon(Icons.shopping_cart, color: Colors.white),
+                                child: const Text("Beli Sekarang", style: TextStyle(fontSize: 16, color: Colors.white)),
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      ),
-                  ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                // Action for Add to Cart button
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: Icon(Icons.shopping_cart, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
                 ),
-              ),
+
             ]
       ),
     )
