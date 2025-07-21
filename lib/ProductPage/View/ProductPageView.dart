@@ -113,7 +113,7 @@ class _ProductpageviewState extends State<Productpageview> {
                        Row(
                          children: [
                            CircleAvatar(
-                            backgroundImage: NetworkImage('https://instagram.fcgk30-1.fna.fbcdn.net/v/t51.29350-15/364993387_1032284108101815_2803375922758780302_n.webp?stp=dst-jpg_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQuaW1hZ2VfdXJsZ2VuLjc1Nng3NTYuc2RyLmYyOTM1MC5kZWZhdWx0X2ltYWdlIn0&_nc_ht=instagram.fcgk30-1.fna.fbcdn.net&_nc_cat=103&_nc_oc=Q6cZ2QHAp8gCSk2lvY0vZBIQwP5_Cy4Gp6UTgIaADABsLMvdMiLgN9pkJrrh3PPc14BR_1M&_nc_ohc=nkYnVXGL3-MQ7kNvwG0NatV&_nc_gid=oloy2UKAeoq04awEZDtkHg&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzE2MTY1MjY1MzMwODgxODA0Nw%3D%3D.3-ccb7-5&oh=00_AfRK6efud9VjMz3jRN4tYq1_aESIHfxMo_fCge401oYP1g&oe=6883B7BB&_nc_sid=10d13b'),
+                            backgroundImage: NetworkImage('https://assets.promediateknologi.id/crop/0x0:0x0/750x500/webp/photo/2022/11/27/4181532000.jpg'),
                             radius: 50,
                            ),
                             const SizedBox(width: 10),
@@ -121,7 +121,7 @@ class _ProductpageviewState extends State<Productpageview> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Prayatna Ardi Wibisono",
+                                  "Mas Gibran asal Solo",
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
