@@ -9,7 +9,7 @@ import '../Dashboard/View/dashboard_view.dart';
 class RoutesPage {
   static List<GetPage> page = [
     GetPage(name: RouteNames.SignInUp , page: () => Registerview()),
-    GetPage(name: RouteNames.home , page: () => dashboardView()),
+    GetPage(name: RouteNames.home , page: () => DashboardView()),
     GetPage(name: RouteNames.product , page: () => Productpageview()),
     GetPage(name: RouteNames.profile , page: () => ProfileView()),
   ];

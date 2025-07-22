@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             title: 'Agri Marketplace',
             getPages: RoutesPage.page,
             // initialRoute: snapshot.data != null ? RouteNames.home : RouteNames.SignInUp,
-            home: snapshot.data != null /* && !authC.isRegistering.value*/ ? dashboardView() : Registerview(),
+            home: snapshot.data != null /* && !authC.isRegistering.value*/ ? DashboardView() : Registerview(),
           );
         }
         return CircularProgressIndicator();
