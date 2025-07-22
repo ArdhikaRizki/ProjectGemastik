@@ -226,8 +226,18 @@ class DashboardView extends StatelessWidget {
     );
   }
 
+  void navigateBottomBar(int index) {
+    if (index == 3) {
+      Get.toNamed('/profile');
+    }
+  }
+
+
+
   Widget _buildBottomNavigationBar() {
     return BottomNavigationBar(
+      onTap: navigateBottomBar,
+
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
         BottomNavigationBarItem(

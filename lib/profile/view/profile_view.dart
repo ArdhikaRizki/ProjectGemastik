@@ -1,162 +1,258 @@
 import 'package:flutter/material.dart';
-// Note: To use image_picker, you would need to add it to your pubspec.yaml
+import 'package:get/get.dart';
+// Catatan: Untuk menggunakan image_picker, Anda perlu menambahkannya ke pubspec.yaml
 // import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-void main() {
-  runApp(const ProfileView());
-}
+import 'package:get/get_core/src/get_main.dart';
+import 'package:project_gemastik/LoginRegister/View/RegisterView.dart';
+import 'package:project_gemastik/main.dart';
 
-class ProfileView extends StatelessWidget {
+// Ganti ini dengan path model dan controller Anda yang sebenarnya
+import '../../LoginRegister/Controlller/SignInUpController.dart';
+import '../../LoginRegister/Model/UserModel.dart';
+import '../Controller/profileController.dart';
+
+
+// --- WIDGET HALAMAN PROFIL ---
+class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Profile Page',
-      theme: ThemeData(
-        primaryColor: const Color(0xFF00AA5B),
-        scaffoldBackgroundColor: const Color(0xFFF5F5F5),
-        fontFamily: 'Inter',
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          elevation: 1,
-          shadowColor: Color(0xFFE0E0E0),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: const BorderSide(color: Color(0xFF00AA5B), width: 2.0),
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 14.0,
-            horizontal: 16.0,
-          ),
-        ),
-      ),
-      home: const ProfilePage(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+class _ProfilePageState extends State<ProfileView> {
+  // --- Controllers ---
+  // Deklarasikan sebagai final, nilainya akan diatur di initState.
+  final _nameController = TextEditingController();
+  final _dobController = TextEditingController();
+  final _genderController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+
+  // --- GetX Controller ---
+  final controller = Get.put(profileController(), permanent: true);
+  final authC = Get.find<SignInUpController>();
+  // --- Variabel State ---
+  File? _image;
+  String? _imageUrl; // Variabel untuk menyimpan URL gambar dari input
+  bool _safeMode = false;
+  String? _editingField;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 7, vsync: this);
+    // Panggil method untuk mengambil dan mengatur data awal.
+    _loadInitialData();
+  }
+
+  /// Mengambil data dari controller dan mengatur nilai awal untuk semua field.
+  Future<void> _loadInitialData() async {
+    // Ambil data pengguna dari controller Anda
+    UserModel userdata = await controller.getUserData();
+
+    // Gunakan setState untuk memberitahu UI agar diperbarui setelah data diterima.
+    setState(() {
+      _nameController.text = userdata.name;
+      _emailController.text = userdata.email;
+      _imageUrl = userdata.urlfoto; // Asumsikan ada field urlfoto di model
+      // Anda bisa menambahkan _imageUrl = userdata.imageUrl jika ada di model
+
+      // Atur nilai default untuk field lain di sini jika perlu
+      _dobController.text = '30 Desember 2000'; // Ganti dengan data asli jika ada
+      _genderController.text = 'Waria'; // Ganti dengan data asli jika ada
+      _phoneController.text = '628789823345'; // Ganti dengan data asli jika ada
+    });
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    // Membersihkan controller untuk membebaskan sumber daya
+    _nameController.dispose();
+    _dobController.dispose();
+    _genderController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
+  // --- Method untuk logika UI ---
+
+  // PERUBAHAN: Mengubah SnackBar menjadi Dialog untuk input URL
+  Future<void> _pickImage() async {
+    final urlController = TextEditingController();
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Masukkan URL Gambar Profil'),
+        content: TextField(
+          controller: urlController,
+          decoration: const InputDecoration(hintText: "https://contoh.com/gambar.jpg"),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (urlController.text.isNotEmpty) {
+                setState(() {
+                  _imageUrl = urlController.text;
+                  _image = null; // Hapus gambar lokal jika ada
+                  controller.updateFoto(urlController.text);
+                });
+              }
+              Navigator.of(context).pop();
+            },
+            child: const Text('Simpan'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // PERBAIKAN: Method diubah menjadi async untuk menggunakan await.
+  void _handleEditToggle(String fieldKey) async {
+    if (_editingField == fieldKey) {
+      // Ini adalah aksi "Simpan"
+      // Panggil fungsi update dan tunggu hingga selesai.
+      // (Anda bisa menambahkan indikator loading di sini untuk UX yang lebih baik)
+      if (fieldKey == 'name') {
+        await controller.updateNama(_nameController.text);
+      }
+      // Tambahkan logika untuk field lain jika perlu
+      // else if (fieldKey == 'dob') { ... }
+
+      // Setelah selesai menyimpan, keluar dari mode edit dengan setState.
+      setState(() {
+        _editingField = null;
+      });
+    } else {
+      // Ini adalah aksi "Ubah"
+      setState(() {
+        _editingField = fieldKey;
+      });
+    }
+  }
+
+  // --- Method utama untuk membangun seluruh UI ---
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pengaturan Profil'),
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          labelColor: const Color(0xFF00AA5B),
-          unselectedLabelColor: Colors.grey[600],
-          indicatorColor: const Color(0xFF00AA5B),
-          indicatorWeight: 3.0,
-          tabs: const [
-            Tab(text: 'Biodata Diri'),
-            Tab(text: 'Daftar Alamat'),
-            Tab(text: 'Notifikasi'),
-            Tab(text: 'Mode Tampilan'),
-            Tab(text: 'Keamanan'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Ubah Biodata Diri',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 24),
+            _buildProfileCard(),
+            const SizedBox(height: 24),
+            _buildSafeModeSection(),
+            const SizedBox(height: 24),
+            _buildLogOutSection(),
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
+    );
+  }
+
+  // --- Method bantuan untuk membangun setiap bagian dari halaman ---
+
+  Widget _buildProfileCard() {
+    return Container(
+      padding: const EdgeInsets.all(24.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 8,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const ProfileDetailsTab(),
-          // Placeholder for other tabs
-          const Center(child: Text('Daftar Alamat')),
-          const Center(child: Text('Notifikasi')),
-          const Center(child: Text('Mode Tampilan')),
-          const Center(child: Text('Keamanan')),
+          Center(child: _buildProfileImageSection()),
+          const SizedBox(height: 24),
+          _buildInfoRow('Nama', _nameController, 'name'),
+          _buildInfoRow('Tanggal Lahir', _dobController, 'dob'),
+          _buildInfoRow('Jenis Kelamin', _genderController, 'gender'),
+          const Divider(height: 32),
+          Text(
+            'Ubah Kontak',
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          _buildInfoRow('Email', _emailController, 'email', isVerified: true),
+          _buildInfoRow('Nomor HP', _phoneController, 'phone', isVerified: true),
         ],
       ),
     );
   }
-}
 
-class ProfileDetailsTab extends StatefulWidget {
-  const ProfileDetailsTab({Key? key}) : super(key: key);
+  Widget _buildProfileImageSection() {
+    // Logika untuk menentukan gambar yang akan ditampilkan
+    ImageProvider backgroundImage;
+    if (_image != null) {
+      backgroundImage = FileImage(_image!);
+    } else if (_imageUrl != null && _imageUrl!.isNotEmpty) {
+      backgroundImage = NetworkImage(_imageUrl!);
+    } else {
+      // Gambar placeholder default
+      backgroundImage = const NetworkImage('https://placehold.co/400x400/FF5722/FFFFFF?text=R');
+    }
 
-  @override
-  _ProfileDetailsTabState createState() => _ProfileDetailsTabState();
-}
-
-class _ProfileDetailsTabState extends State<ProfileDetailsTab> {
-  final TextEditingController _nameController = TextEditingController(
-    text: 'Firman Arman Elyuzar',
-  );
-  final TextEditingController _dobController = TextEditingController(
-    text: '30 Desember 2000',
-  );
-  final TextEditingController _genderController = TextEditingController(
-    text: 'Waria',
-  );
-  final TextEditingController _emailController = TextEditingController(
-    text: 'NgentotAsik@gmail.com',
-  );
-  final TextEditingController _phoneController = TextEditingController(
-    text: '628789823345',
-  );
-
-  File? _image;
-  bool _safeMode = false;
-
-  // State to track which field is being edited
-  String? _editingField;
-
-  Future<void> _pickImage() async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text(
-          'Image picker functionality would be implemented here.',
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 70,
+          backgroundImage: backgroundImage,
+          backgroundColor: Colors.grey[200],
+          // Menambahkan errorBuilder untuk NetworkImage
+          onBackgroundImageError: _imageUrl != null && _imageUrl!.isNotEmpty ? (exception, stackTrace) {
+            // Anda bisa menampilkan pesan error atau gambar default lain jika URL gagal dimuat
+            print('Error loading image: $exception');
+          } : null,
         ),
-        backgroundColor: Colors.green[700],
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
+        const SizedBox(height: 16),
+        OutlinedButton.icon(
+          onPressed: _pickImage,
+          icon: const Icon(Icons.photo_camera_outlined),
+          label: const Text('Ubah Foto'), // Teks diubah agar lebih sesuai
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Besar file: maks 10 MB. Ekstensi: JPG, JPEG, PNG',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey[500], fontSize: 12),
+        ),
+      ],
     );
   }
 
-  Widget _buildInfoRow({
-    required String label,
-    required TextEditingController controller,
-    bool isVerified = false,
-    required String fieldKey,
-  }) {
+  Widget _buildInfoRow(
+      String label, TextEditingController controller, String fieldKey,
+      {bool isVerified = false}) {
     bool isEditing = _editingField == fieldKey;
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Row(
@@ -164,214 +260,36 @@ class _ProfileDetailsTabState extends State<ProfileDetailsTab> {
         children: [
           SizedBox(
             width: 120,
-            child: Text(
-              label,
-              style: TextStyle(color: Colors.grey[600], fontSize: 15),
-            ),
+            child: Text(label, style: TextStyle(color: Colors.grey[600])),
           ),
           Expanded(
-            child:
-                isEditing
-                    ? TextField(
-                      controller: controller,
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        isDense: true,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 12,
-                        ),
-                      ),
-                    )
-                    : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          controller.text,
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        if (isVerified) ...[
-                          const SizedBox(height: 4),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.green.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: const Text(
-                              'Terverifikasi',
-                              style: TextStyle(
-                                color: Color(0xFF00AA5B),
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
+            child: isEditing
+                ? TextField(controller: controller, autofocus: true)
+                : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(controller.text,
+                    style: const TextStyle(fontWeight: FontWeight.w500)),
+                if (isVerified) ...[
+                  const SizedBox(height: 4),
+                  const Text('Terverifikasi',
+                      style: TextStyle(
+                          color: Color(0xFF00AA5B),
+                          fontWeight: FontWeight.bold)),
+                ]
+              ],
+            ),
           ),
-          const SizedBox(width: 16),
           TextButton(
-            onPressed: () {
-              setState(() {
-                if (isEditing) {
-                  // This is where you would save the data
-                  _editingField = null;
-                } else {
-                  _editingField = fieldKey;
-                }
-              });
-            },
+            onPressed: () => _handleEditToggle(fieldKey),
             child: Text(
               isEditing ? 'Simpan' : 'Ubah',
               style: const TextStyle(
-                color: Color(0xFF00AA5B),
-                fontWeight: FontWeight.bold,
-              ),
+                  color: Color(0xFF00AA5B), fontWeight: FontWeight.bold),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        bool isWideScreen = constraints.maxWidth > 600;
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Ubah Biodata Diri',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 24),
-              Container(
-                padding: const EdgeInsets.all(24.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 2,
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Flex(
-                  direction: isWideScreen ? Axis.horizontal : Axis.vertical,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      flex: isWideScreen ? 1 : 0,
-                      child: _buildProfileImageSection(),
-                    ),
-                    if (isWideScreen) const SizedBox(width: 32),
-                    Flexible(
-                      flex: isWideScreen ? 2 : 0,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildInfoRow(
-                            label: 'Nama',
-                            controller: _nameController,
-                            fieldKey: 'name',
-                          ),
-                          _buildInfoRow(
-                            label: 'Tanggal Lahir',
-                            controller: _dobController,
-                            fieldKey: 'dob',
-                          ),
-                          _buildInfoRow(
-                            label: 'Jenis Kelamin',
-                            controller: _genderController,
-                            fieldKey: 'gender',
-                          ),
-                          const Divider(height: 32),
-                          Text(
-                            'Ubah Kontak',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 16),
-                          _buildInfoRow(
-                            label: 'Email',
-                            controller: _emailController,
-                            isVerified: true,
-                            fieldKey: 'email',
-                          ),
-                          _buildInfoRow(
-                            label: 'Nomor HP',
-                            controller: _phoneController,
-                            isVerified: true,
-                            fieldKey: 'phone',
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              _buildSafeModeSection(),
-              const SizedBox(height: 24),
-              _buildLogOutSection(),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildProfileImageSection() {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 70,
-          backgroundImage:
-              _image != null
-                  ? FileImage(_image!)
-                  : const NetworkImage(
-                        'https://placehold.co/400x400/FF5722/FFFFFF?text=R',
-                      )
-                      as ImageProvider,
-          backgroundColor: Colors.grey[200],
-        ),
-        const SizedBox(height: 16),
-        OutlinedButton.icon(
-          onPressed: _pickImage,
-          icon: const Icon(Icons.photo_camera_outlined),
-          label: const Text('Pilih Foto'),
-          style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.grey[700],
-            side: BorderSide(color: Colors.grey[300]!),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Besar file: maksimum 10.000.000 bytes (10 Megabytes). Ekstensi file yang diperbolehkan: JPG, JPEG, PNG',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.grey[500], fontSize: 12),
-        ),
-      ],
     );
   }
 
@@ -388,27 +306,20 @@ class _ProfileDetailsTabState extends State<ProfileDetailsTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Safe Mode',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Text('Safe Mode',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
-                Text(
-                  'Fitur ini akan otomatis menyaring hasil pencarian sesuai kebijakan dan batasan usia pengguna.',
-                  style: TextStyle(color: Colors.grey[600]),
-                ),
+                Text('Menyaring hasil pencarian.',
+                    style: TextStyle(color: Colors.grey[600])),
               ],
             ),
           ),
           Switch(
             value: _safeMode,
-            onChanged: (value) {
-              setState(() {
-                _safeMode = value;
-              });
-            },
+            onChanged: (value) => setState(() => _safeMode = value),
             activeColor: const Color(0xFF00AA5B),
           ),
         ],
@@ -416,7 +327,6 @@ class _ProfileDetailsTabState extends State<ProfileDetailsTab> {
     );
   }
 
-  @override
   Widget _buildLogOutSection() {
     return Container(
       padding: const EdgeInsets.all(24.0),
@@ -427,44 +337,24 @@ class _ProfileDetailsTabState extends State<ProfileDetailsTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Keluar',
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Anda dapat keluar dari akun Anda dengan menekan tombol di bawah ini.',
-            style: TextStyle(color: Colors.grey[600]),
-          ),
+          Text('Keluar',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                // Handle logout logic here
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text('Anda telah keluar.'),
-                    backgroundColor: Colors.red[700],
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
+                  const SnackBar(content: Text('Anda telah keluar.')),
                 );
+                authC.signOut();
+                Get.back();
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                'Keluar',
-                style: TextStyle(color: Colors.white),
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text('Keluar', style: TextStyle(color: Colors.white)),
             ),
           ),
         ],
