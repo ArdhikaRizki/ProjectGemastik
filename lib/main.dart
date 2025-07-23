@@ -25,18 +25,27 @@ class MyApp extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: authC.streamAuthStatus,
       builder: (context, snapshot) {
-        if(snapshot.connectionState == ConnectionState.active){
+        if (snapshot.connectionState == ConnectionState.active) {
           print(snapshot);
           return GetMaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Agri Marketplace',
             getPages: RoutesPage.page,
             // initialRoute: snapshot.data != null ? RouteNames.home : RouteNames.SignInUp,
-            home: snapshot.data != null /* && !authC.isRegistering.value*/ ? DashboardView() : Registerview(),
+            home: Obx(() {
+              if (authC.isRegistering.value) {
+                return const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                );
+              }
+              return snapshot.data != null /*&& !authC.isRegistering.value */
+                  ? DashboardView()
+                  : Registerview();
+            }),
           );
         }
         return CircularProgressIndicator();
-      }
+      },
     );
   }
 }

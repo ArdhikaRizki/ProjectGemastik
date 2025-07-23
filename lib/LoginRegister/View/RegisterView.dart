@@ -135,7 +135,7 @@ class Registerview extends GetView<SignInUpController> {
                                     child: TextButton(
                                       onPressed: regispasswordC.text ==
                                           regisconfirmPasswordC.text
-                                          ? () =>authC.signUp(regisemailC.text,regispasswordC.text)
+                                          ? () =>authC.signUp(regisemailC.text,regispasswordC.text,"", "") // Add name and phoneNumber if needed
                                           : () {
                                         Get.snackbar("Error",
                                             "Password tidak sama");
