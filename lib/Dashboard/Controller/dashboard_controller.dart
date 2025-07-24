@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:project_gemastik/Dashboard/Model/product_model.dart';
+import 'package:project_gemastik/Dashboard/View/ProductPageView.dart';
+
+import '../../Routes/route_names.dart';
+
 
 class DashboardController extends GetxController {
   CollectionReference products = FirebaseFirestore.instance.collection('products',
   );
 
   var productList = <ProductModel>[].obs;
-
-  
-
   // Example method to fetch data or perform an action
   void fetchData() {
     products
@@ -43,6 +44,9 @@ class DashboardController extends GetxController {
     } catch (e) {
       print("Error adding product: $e");
     }
+  }
+  void handleisTap(ProductModel product) {
+    Get.toNamed(RouteNames.product, arguments: product);
   }
 
   @override
