@@ -62,7 +62,7 @@ class _ProfilePageState extends State<ProfileView> {
       // Atur nilai default untuk field lain di sini jika perlu
       _dobController.text = '30 Desember 2000'; // Ganti dengan data asli jika ada
       _genderController.text = 'Waria'; // Ganti dengan data asli jika ada
-      _phoneController.text = '628789823345'; // Ganti dengan data asli jika ada
+      _phoneController.text = userdata.phoneNumber; // Ganti dengan data asli jika ada
     });
   }
 
@@ -102,7 +102,7 @@ class _ProfilePageState extends State<ProfileView> {
                 setState(() {
                   _imageUrl = urlController.text;
                   _image = null; // Hapus gambar lokal jika ada
-                  controller.updateFoto(urlController.text);
+                  controller.updateImage(urlController.text);
                 });
               }
               Navigator.of(context).pop();
@@ -121,12 +121,11 @@ class _ProfilePageState extends State<ProfileView> {
       // Panggil fungsi update dan tunggu hingga selesai.
       // (Anda bisa menambahkan indikator loading di sini untuk UX yang lebih baik)
       if (fieldKey == 'name') {
-        await controller.updateNama(_nameController.text);
+        await controller.updateName(_nameController.text);
       }
-      // Tambahkan logika untuk field lain jika perlu
-      // else if (fieldKey == 'dob') { ... }
-
-      // Setelah selesai menyimpan, keluar dari mode edit dengan setState.
+      if (fieldKey == 'phone') {
+        await controller.updatePhoneNumber(_phoneController.text);
+      }
       setState(() {
         _editingField = null;
       });
@@ -191,8 +190,7 @@ class _ProfilePageState extends State<ProfileView> {
           Center(child: _buildProfileImageSection()),
           const SizedBox(height: 24),
           _buildInfoRow('Nama', _nameController, 'name'),
-          _buildInfoRow('Tanggal Lahir', _dobController, 'dob'),
-          _buildInfoRow('Jenis Kelamin', _genderController, 'gender'),
+          // _buildInfoRow('Tanggal Lahir', _dobController, 'dob'),
           const Divider(height: 32),
           Text(
             'Ubah Kontak',
@@ -235,7 +233,10 @@ class _ProfilePageState extends State<ProfileView> {
         ),
         const SizedBox(height: 16),
         OutlinedButton.icon(
-          onPressed: _pickImage,
+          onPressed: (){
+            controller.pickImage();
+            controller.getUserData();
+          },
           icon: const Icon(Icons.photo_camera_outlined),
           label: const Text('Ubah Foto'), // Teks diubah agar lebih sesuai
         ),
