@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// Catatan: Untuk menggunakan image_picker, Anda perlu menambahkannya ke pubspec.yaml
-// import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
-import 'package:get/get_core/src/get_main.dart';
-import 'package:project_gemastik/LoginRegister/View/RegisterView.dart';
-import 'package:project_gemastik/main.dart';
-
-// Ganti ini dengan path model dan controller Anda yang sebenarnya
 import '../../LoginRegister/Controlller/SignInUpController.dart';
 import '../../LoginRegister/Model/UserModel.dart';
 import '../Controller/profileController.dart';
@@ -49,21 +41,20 @@ class _ProfilePageState extends State<ProfileView> {
 
   /// Mengambil data dari controller dan mengatur nilai awal untuk semua field.
   Future<void> _loadInitialData() async {
-    // Ambil data pengguna dari controller Anda
+
     UserModel userdata = await controller.getUserData();
 
-    // Gunakan setState untuk memberitahu UI agar diperbarui setelah data diterima.
-    setState(() {
-      _nameController.text = userdata.name;
-      _emailController.text = userdata.email;
-      _imageUrl = userdata.urlfoto; // Asumsikan ada field urlfoto di model
-      // Anda bisa menambahkan _imageUrl = userdata.imageUrl jika ada di model
-
-      // Atur nilai default untuk field lain di sini jika perlu
-      _dobController.text = '30 Desember 2000'; // Ganti dengan data asli jika ada
-      _genderController.text = 'Waria'; // Ganti dengan data asli jika ada
-      _phoneController.text = userdata.phoneNumber; // Ganti dengan data asli jika ada
-    });
+    // Pastikan widget masih ada sebelum memanggil setState
+    if (mounted) {
+      setState(() {
+        _nameController.text = userdata.name;
+        _emailController.text = userdata.email;
+        _imageUrl = userdata.urlfoto;
+        _dobController.text = '30 Desember 2000';
+        _genderController.text = 'Waria';
+        _phoneController.text = userdata.phoneNumber;
+      });
+    }
   }
 
   @override
@@ -77,49 +68,11 @@ class _ProfilePageState extends State<ProfileView> {
     super.dispose();
   }
 
-  // --- Method untuk logika UI ---
-
-  // PERUBAHAN: Mengubah SnackBar menjadi Dialog untuk input URL
-  Future<void> _pickImage() async {
-    final urlController = TextEditingController();
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Masukkan URL Gambar Profil'),
-        content: TextField(
-          controller: urlController,
-          decoration: const InputDecoration(hintText: "https://contoh.com/gambar.jpg"),
-          autofocus: true,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Batal'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (urlController.text.isNotEmpty) {
-                setState(() {
-                  _imageUrl = urlController.text;
-                  _image = null; // Hapus gambar lokal jika ada
-                  controller.updateImage(urlController.text);
-                });
-              }
-              Navigator.of(context).pop();
-            },
-            child: const Text('Simpan'),
-          ),
-        ],
-      ),
-    );
-  }
-
   // PERBAIKAN: Method diubah menjadi async untuk menggunakan await.
   void _handleEditToggle(String fieldKey) async {
     if (_editingField == fieldKey) {
       // Ini adalah aksi "Simpan"
       // Panggil fungsi update dan tunggu hingga selesai.
-      // (Anda bisa menambahkan indikator loading di sini untuk UX yang lebih baik)
       if (fieldKey == 'name') {
         await controller.updateName(_nameController.text);
       }
@@ -190,7 +143,6 @@ class _ProfilePageState extends State<ProfileView> {
           Center(child: _buildProfileImageSection()),
           const SizedBox(height: 24),
           _buildInfoRow('Nama', _nameController, 'name'),
-          // _buildInfoRow('Tanggal Lahir', _dobController, 'dob'),
           const Divider(height: 32),
           Text(
             'Ubah Kontak',
@@ -207,12 +159,11 @@ class _ProfilePageState extends State<ProfileView> {
     );
   }
 
+  // PERBAIKAN UTAMA ADA DI SINI
   Widget _buildProfileImageSection() {
-    // Logika untuk menentukan gambar yang akan ditampilkan
-    ImageProvider backgroundImage;
-    if (_image != null) {
-      backgroundImage = FileImage(_image!);
-    } else if (_imageUrl != null && _imageUrl!.isNotEmpty) {
+      ImageProvider backgroundImage;
+    if (_imageUrl != null && _imageUrl!.isNotEmpty) {
+      // Buat NetworkImage tanpa key
       backgroundImage = NetworkImage(_imageUrl!);
     } else {
       // Gambar placeholder default
@@ -221,24 +172,24 @@ class _ProfilePageState extends State<ProfileView> {
 
     return Column(
       children: [
-        CircleAvatar(
-          radius: 70,
-          backgroundImage: backgroundImage,
-          backgroundColor: Colors.grey[200],
-          // Menambahkan errorBuilder untuk NetworkImage
-          onBackgroundImageError: _imageUrl != null && _imageUrl!.isNotEmpty ? (exception, stackTrace) {
-            // Anda bisa menampilkan pesan error atau gambar default lain jika URL gagal dimuat
-            print('Error loading image: $exception');
-          } : null,
-        ),
+        Obx((){
+          backgroundImage.evict();
+          return CircleAvatar(
+            // PERBAIKAN: Tempatkan UniqueKey() di sini, pada widget CircleAvatar
+            key: controller.imageKey.value,
+            radius: 70,
+            backgroundImage: backgroundImage,
+            backgroundColor: Colors.grey[200],
+          );
+        }),
         const SizedBox(height: 16),
         OutlinedButton.icon(
-          onPressed: (){
-            controller.pickImage();
-            controller.getUserData();
+          // 1. Ubah onPressed menjadi async
+          onPressed: () async {
+            await controller.pickImage();
           },
           icon: const Icon(Icons.photo_camera_outlined),
-          label: const Text('Ubah Foto'), // Teks diubah agar lebih sesuai
+          label: const Text('Ubah Foto'),
         ),
         const SizedBox(height: 8),
         Text(
