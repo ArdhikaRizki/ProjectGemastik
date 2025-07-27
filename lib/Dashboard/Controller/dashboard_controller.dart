@@ -48,6 +48,7 @@ class DashboardController extends GetxController {
   void handleisTap(ProductModel product) {
     Get.toNamed(RouteNames.product, arguments: product);
   }
+  
 
   @override
   void onInit() {

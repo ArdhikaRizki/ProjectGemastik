@@ -6,9 +6,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:project_gemastik/LoginRegister/Controlller/SignInUpController.dart';
-import 'package:project_gemastik/Routes/route_names.dart';
 import 'package:project_gemastik/Routes/route_pages.dart';
-import 'package:project_gemastik/Dashboard/View/dashboard_view.dart';
+import 'package:project_gemastik/Dashboard/View/main_app.dart';
 
 import 'LoginRegister/View/RegisterView.dart';
 
@@ -39,7 +38,7 @@ class MyApp extends StatelessWidget {
                 );
               }
               return snapshot.data != null /*&& !authC.isRegistering.value */
-                  ? DashboardView()
+                  ? MainApp()
                   : Registerview();
             }),
           );

@@ -1,14 +1,11 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_gemastik/Dashboard/Controller/dashboard_controller.dart';
 import 'package:project_gemastik/Dashboard/Model/product_model.dart';
-import 'package:project_gemastik/Dashboard/View/ProductPageView.dart';
-
-
 
 class DashboardView extends StatelessWidget {
   final DashboardController controller = Get.put(DashboardController());
+  // final _selectedIndex = 0.obs;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +32,7 @@ class DashboardView extends StatelessWidget {
           ],
         );
       }),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+      // bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
@@ -104,13 +101,15 @@ class DashboardView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: InkWell(
-        onTap: (){
+        onTap: () {
           controller.handleisTap(product);
         },
         child: Card(
           color: const Color.fromARGB(255, 216, 248, 220),
           elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           child: Container(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -177,7 +176,7 @@ class DashboardView extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: InkWell(
-              onTap: ()=>controller.handleisTap(product),
+              onTap: () => controller.handleisTap(product),
               child: Card(
                 color: const Color.fromARGB(255, 216, 248, 220),
                 elevation: 4,
@@ -237,37 +236,36 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  void navigateBottomBar(int index) {
-    if (index == 3) {
-      Get.toNamed('/profile');
-    }
-  }
+  
 
+  // Widget _buildBottomNavigationBar() {
+  //   return Obx(() {
+  //     return BottomNavigationBar(
+  //       currentIndex : controller.selectedIndex.value,
+  //       onTap: controller.navigateBottomBar,
 
-
-  Widget _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      onTap: navigateBottomBar,
-
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_bag_outlined),
-          label: 'Shop',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.article_outlined),
-          label: 'Blog',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
-          label: 'Profile',
-        ),
-      ],
-      currentIndex: 1,
-      selectedItemColor: Colors.green[800],
-      unselectedItemColor: Colors.grey[600],
-      type: BottomNavigationBarType.fixed,
-    );
-  }
+  //       items: const [
+  //         BottomNavigationBarItem(
+  //           icon: Icon(Icons.home_outlined),
+  //           label: 'Home',
+  //         ),
+  //         BottomNavigationBarItem(
+  //           icon: Icon(Icons.shopping_bag_outlined),
+  //           label: 'Shop',
+  //         ),
+  //         BottomNavigationBarItem(
+  //           icon: Icon(Icons.article_outlined),
+  //           label: 'Blog',
+  //         ),
+  //         BottomNavigationBarItem(
+  //           icon: Icon(Icons.person_outline),
+  //           label: 'Profile',
+  //         ),
+  //       ],
+  //       selectedItemColor: Colors.green[800],
+  //       unselectedItemColor: Colors.grey[600],
+  //       type: BottomNavigationBarType.fixed,
+  //     );
+  //   });
+  // }
 }
