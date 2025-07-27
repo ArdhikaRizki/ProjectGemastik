@@ -9,12 +9,17 @@ class SignInUpController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
   final List<String> roles = ['pembeli', 'petani', 'koperasi'];
   var selectedRole = 'pembeli'.obs;
+  // RxString roleDipilih = ''.obs;
   Stream<User?> get streamAuthStatus => auth.authStateChanges();
 
   void updateRole(String? newValue) {
     if (newValue != null) {
       selectedRole.value = newValue;
     }
+  }
+
+  String getUserRole() {
+    return selectedRole.value;
   }
 
   Future<void> signUp(

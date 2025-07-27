@@ -53,6 +53,7 @@ class profileController extends GetxController {
           .update({'urlfoto': imageUrl});
     }
   }
+  
 
   Future<UserModel> getUserData() async {
     final docSnapshot = await FirebaseFirestore.instance

@@ -7,8 +7,7 @@ import '../../Routes/route_names.dart';
 
 
 class DashboardController extends GetxController {
-  CollectionReference products = FirebaseFirestore.instance.collection('products',
-  );
+  CollectionReference products = FirebaseFirestore.instance.collection('products',);
 
   var productList = <ProductModel>[].obs;
   // Example method to fetch data or perform an action
