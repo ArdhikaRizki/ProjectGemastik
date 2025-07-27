@@ -5,16 +5,21 @@ import 'package:project_gemastik/Dashboard/Controller/dashboard_controller.dart'
 import 'package:project_gemastik/Dashboard/Model/product_model.dart';
 import 'package:project_gemastik/Dashboard/View/ProductPageView.dart';
 
-
-
 class DashboardView extends StatelessWidget {
-  final DashboardController controller = Get.put(DashboardController());
+  // final DashboardController controller = Get.put(DashboardController()); // Dihapus dari sini
+
+  DashboardView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    // PERBAIKAN: Pindahkan inisialisasi controller ke dalam method build.
+    // GetX cukup pintar untuk memastikan ini hanya dijalankan sekali.
+    final DashboardController controller = Get.put(DashboardController());
+
+    // Scaffold dan BottomNav sudah disediakan oleh MainScreen
     return Scaffold(
       appBar: AppBar(title: const Text('Agri Marketplace')),
       body: Obx(() {
-        print(controller.productList);
         if (controller.productList.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -27,35 +32,27 @@ class DashboardView extends StatelessWidget {
             const SizedBox(height: 32),
             _buildSectionHeader(context, 'Featured Product'),
             const SizedBox(height: 16),
-            _buildFeaturedProduct(controller.productList.first),
+            _buildFeaturedProduct(controller, controller.productList.first),
             const SizedBox(height: 32),
             _buildSectionHeader(context, 'Popular Items'),
             const SizedBox(height: 16),
-            _buildPopularItems(controller.productList),
+            _buildPopularItems(controller, controller.productList),
           ],
         );
       }),
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
+  // Method-method build sekarang menerima controller sebagai parameter
   Widget _buildHeader(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Find Fresh Produce',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          Text('Find Fresh Produce', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 4),
-          Text(
-            'From Our Farms to Your Table',
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-          ),
+          Text('From Our Farms to Your Table', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600])),
         ],
       ),
     );
@@ -91,22 +88,17 @@ class DashboardView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title, style: Theme.of(context).textTheme.titleLarge),
-          Text(
-            'See All',
-            style: TextStyle(color: Colors.green, fontWeight: FontWeight.w600),
-          ),
+          const Text('See All', style: TextStyle(color: Colors.green, fontWeight: FontWeight.w600)),
         ],
       ),
     );
   }
 
-  Widget _buildFeaturedProduct(ProductModel product) {
+  Widget _buildFeaturedProduct(DashboardController controller, ProductModel product) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: InkWell(
-        onTap: (){
-          controller.handleisTap(product);
-        },
+        onTap: () => controller.handleisTap(product),
         child: Card(
           color: const Color.fromARGB(255, 216, 248, 220),
           elevation: 4,
@@ -117,43 +109,18 @@ class DashboardView extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16),
-                  child: Image.network(
-                    product.imageUrl,
-                    height: 120,
-                    width: 120,
-                    fit: BoxFit.cover,
-                    errorBuilder:
-                        (context, error, stackTrace) => const Icon(Icons.error),
-                  ),
+                  child: Image.network(product.imageUrl, height: 120, width: 120, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) => const Icon(Icons.error)),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        product.title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
+                      Text(product.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                       const SizedBox(height: 8),
-                      Text(
-                        product.description,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      Text(product.description, style: TextStyle(color: Colors.grey[600], fontSize: 13), maxLines: 3, overflow: TextOverflow.ellipsis),
                       const SizedBox(height: 12),
-                      Text(
-                        '\$${product.price}',
-                        style: const TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
+                      Text('\$${product.price}', style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 20)),
                     ],
                   ),
                 ),
@@ -165,7 +132,7 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  Widget _buildPopularItems(List<ProductModel> products) {
+  Widget _buildPopularItems(DashboardController controller, List<ProductModel> products) {
     return SizedBox(
       height: 280,
       child: ListView.builder(
@@ -177,13 +144,11 @@ class DashboardView extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: InkWell(
-              onTap: ()=>controller.handleisTap(product),
+              onTap: () => controller.handleisTap(product),
               child: Card(
                 color: const Color.fromARGB(255, 216, 248, 220),
                 elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 child: Container(
                   width: 180,
                   padding: const EdgeInsets.all(12),
@@ -192,40 +157,14 @@ class DashboardView extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(16),
-                        child: Image.network(
-                          product.imageUrl,
-                          height: 120,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder:
-                              (context, error, stackTrace) =>
-                                  const Icon(Icons.error),
-                        ),
+                        child: Image.network(product.imageUrl, height: 120, width: double.infinity, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) => const Icon(Icons.error)),
                       ),
                       const SizedBox(height: 12),
-                      Text(
-                        product.title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      Text(product.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), maxLines: 1, overflow: TextOverflow.ellipsis),
                       const SizedBox(height: 4),
-                      Text(
-                        product.description,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                      ),
+                      Text(product.description, style: TextStyle(color: Colors.grey[600], fontSize: 13)),
                       const Spacer(),
-                      Text(
-                        '\$${product.price}',
-                        style: const TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
+                      Text('\$${product.price}', style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 18)),
                     ],
                   ),
                 ),
@@ -234,40 +173,6 @@ class DashboardView extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-
-  void navigateBottomBar(int index) {
-    if (index == 3) {
-      Get.toNamed('/profile');
-    }
-  }
-
-
-
-  Widget _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      onTap: navigateBottomBar,
-
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_bag_outlined),
-          label: 'Shop',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.article_outlined),
-          label: 'Blog',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
-          label: 'Profile',
-        ),
-      ],
-      currentIndex: 1,
-      selectedItemColor: Colors.green[800],
-      unselectedItemColor: Colors.grey[600],
-      type: BottomNavigationBarType.fixed,
     );
   }
 }
