@@ -130,12 +130,30 @@ class Registerview extends GetView<SignInUpController> {
                                     ),
                                   ),
                                   SizedBox(height: 20,),
+                                  DropdownButtonFormField<String>(
+                                    decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Kamu siapa?',
+                                    ),
+                                    value: authC.selectedRole.value, // Nilai yang sedang aktif
+                                    items: authC.roles.map((String role) {
+                                      return DropdownMenuItem<String>(
+                                        value: role,
+                                        child: Text(role.capitalizeFirst ?? role), // Membuat huruf pertama besar
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? newValue) {
+                                      // Panggil fungsi di controller untuk update nilai
+                                      authC.updateRole(newValue);
+                                    },
+                                  ),
+                                  SizedBox(height: 20,),
                                   Container(
                                     width: double.infinity,
                                     child: TextButton(
                                       onPressed: regispasswordC.text ==
                                           regisconfirmPasswordC.text
-                                          ? () =>authC.signUp(regisemailC.text,regispasswordC.text,"", "") // Add name and phoneNumber if needed
+                                          ? () =>authC.signUp(regisemailC.text,regispasswordC.text,"", "", authC.selectedRole.value) // Add name and phoneNumber if needed
                                           : () {
                                         Get.snackbar("Error",
                                             "Password tidak sama");

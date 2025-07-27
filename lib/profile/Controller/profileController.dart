@@ -65,16 +65,17 @@ class profileController extends GetxController {
       final email = data['email'];
       final photoUrl = data['urlfoto'];
       final phoneNumber = data['phoneNumber'];
+      final role = data['role'];
 
       return UserModel(
         name: nama ?? '',
         email: email ?? '',
         urlfoto: photoUrl ?? '',
         phoneNumber: phoneNumber ?? '',
+        role: role ?? 'pembeli', // Default role if not set
       );
     } else {
-      print('No user is signed in.');
-      return UserModel(name: '', email: '', urlfoto: '');
+      return UserModel(name: '', email: '', urlfoto: '', phoneNumber: '', role: 'pembeli');
     }
   }
 

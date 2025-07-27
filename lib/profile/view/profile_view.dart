@@ -22,7 +22,6 @@ class _ProfilePageState extends State<ProfileView> {
   final _genderController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
-
   // --- GetX Controller ---
   final controller = Get.put(profileController(), permanent: true);
   final authC = Get.find<SignInUpController>();
@@ -31,7 +30,7 @@ class _ProfilePageState extends State<ProfileView> {
   String? _imageUrl; // Variabel untuk menyimpan URL gambar dari input
   bool _safeMode = false;
   String? _editingField;
-
+  String _role = "loading"; // Ganti dengan logika yang sesuai untuk mendapatkan role
   @override
   void initState() {
     super.initState();
@@ -43,9 +42,10 @@ class _ProfilePageState extends State<ProfileView> {
   Future<void> _loadInitialData() async {
 
     UserModel userdata = await controller.getUserData();
-
+    _role = userdata.role; // Ambil role dari userdata
     // Pastikan widget masih ada sebelum memanggil setState
     if (mounted) {
+
       setState(() {
         _nameController.text = userdata.name;
         _emailController.text = userdata.email;
@@ -53,6 +53,7 @@ class _ProfilePageState extends State<ProfileView> {
         _dobController.text = '30 Desember 2000';
         _genderController.text = 'Waria';
         _phoneController.text = userdata.phoneNumber;
+
       });
     }
   }
@@ -154,6 +155,19 @@ class _ProfilePageState extends State<ProfileView> {
           const SizedBox(height: 16),
           _buildInfoRow('Email', _emailController, 'email', isVerified: true),
           _buildInfoRow('Nomor HP', _phoneController, 'phone', isVerified: true),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 80,
+                  child: Text("Sebagai", style: TextStyle(color: Colors.grey[600])),
+                ),
+                  Text(_role.toUpperCase(), style: TextStyle(color: Color(0xFF00AA5B), fontWeight: FontWeight.bold))
+                ]
+            )
+          )
         ],
       ),
     );
@@ -211,7 +225,7 @@ class _ProfilePageState extends State<ProfileView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 120,
+            width: 80,
             child: Text(label, style: TextStyle(color: Colors.grey[600])),
           ),
           Expanded(

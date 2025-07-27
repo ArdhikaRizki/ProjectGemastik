@@ -2,20 +2,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:project_gemastik/LoginRegister/Model/UserModel.dart';
-import 'package:project_gemastik/LoginRegister/View/RegisterView.dart';
+
 
 class SignInUpController extends GetxController {
   RxBool isRegistering = false.obs;
   FirebaseAuth auth = FirebaseAuth.instance;
-
+  final List<String> roles = ['pembeli', 'petani', 'koperasi'];
+  var selectedRole = 'pembeli'.obs;
   Stream<User?> get streamAuthStatus => auth.authStateChanges();
+
+  void updateRole(String? newValue) {
+    if (newValue != null) {
+      selectedRole.value = newValue;
+    }
+  }
 
   Future<void> signUp(
     String email,
     String password,
     String name,
     String phoneNumber,
+    String role,
   ) async {
     try {
       isRegistering.value = true;
@@ -34,6 +41,7 @@ class SignInUpController extends GetxController {
           'name': name,
           'phoneNumber': phoneNumber,
           'urlfoto': 'https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg', // Default profile picture URL
+          'role': role, // Add role field
         });
       };
       
