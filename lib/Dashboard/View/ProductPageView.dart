@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:project_gemastik/Dashboard/Model/product_model.dart';
-import 'package:project_gemastik/Dashboard/Model/product_model.dart';
+
 class ProductPageController extends GetxController {
   var activeIndex = 0.obs;
 
@@ -14,7 +14,7 @@ class ProductPageController extends GetxController {
 class Productpageview extends StatelessWidget {
   Productpageview({super.key});
   ProductModel produk = Get.arguments as ProductModel;
-  // Daftar gambar bisa disimpan sebagai variabel final di sini.
+
   final List<String> urlImage = const [
     "https://www.pertanianku.com/wp-content/uploads/2021/04/Efek-Samping-Aflatoksin-pada-Kacang-Tanah-Berkualitas-Buruk.jpg",
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0QQ7EtC4wqszok8OlBcp0hyxRG1Zgv9Tp9A&s",
@@ -42,6 +42,10 @@ class Productpageview extends StatelessWidget {
 
     // Halaman sebaiknya mengembalikan Scaffold, bukan MaterialApp.
     return Scaffold(
+      appBar: AppBar(
+        title: Text(produk.title),
+        backgroundColor: Colors.green,
+      ),
       body: SingleChildScrollView( // Menggunakan SingleChildScrollView agar bisa di-scroll
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
