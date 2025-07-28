@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
                 );
               }
               return snapshot.data != null /*&& !authC.isRegistering.value */
-                  ? MainScreen(role: authC.getUserRole())
+                  ? MainScreen()
                   : Registerview();
             }),
           );
