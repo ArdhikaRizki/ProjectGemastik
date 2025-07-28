@@ -12,14 +12,14 @@ class NavigationController extends GetxController {
   // Angka di dalam Get.nestedKey adalah ID unik untuk setiap navigator.  
 
 
-  final GlobalKey<NavigatorState>? homeNavigatorKey = Get.nestedKey(1);
-  final GlobalKey<NavigatorState>? profileNavigatorKey = Get.nestedKey(2);
+  final GlobalKey<NavigatorState>? homeNavigatorKey = Get.nestedKey(0);
+  final GlobalKey<NavigatorState>? profileNavigatorKey = Get.nestedKey(1);
   final GlobalKey<NavigatorState>? addProduct = Get.nestedKey(2);
-  final GlobalKey<NavigatorState>? lihatpenawaran = Get.nestedKey(2);
-  final GlobalKey<NavigatorState>? profileNavigatorkeypetaniKoperasi = Get.nestedKey(3);
+  final GlobalKey<NavigatorState>? lihatpenawaran = Get.nestedKey(3);
+  final GlobalKey<NavigatorState>? profileNavigatorkeypetaniKoperasi = Get.nestedKey(4);
   
   void changeIndex(int index) {
-
+    print("Selected index changed to: $index");
     selectedIndex.value = index;
   }
 }
