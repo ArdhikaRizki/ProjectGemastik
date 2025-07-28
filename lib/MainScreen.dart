@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:project_gemastik/LoginRegister/Controlller/SignInUpController.dart';
+import 'package:project_gemastik/page_petani/catalog_petani/View_Catalog.dart';
 import 'package:project_gemastik/profile/view/profile_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'Dashboard/View/dashboard_view.dart';
@@ -71,8 +72,6 @@ class MainScreenController extends GetxController {
     super.onClose();
   }
 }
-
-
 class MainScreen extends StatelessWidget {
   MainScreen({super.key});
   MainScreenController mscreencontroller = Get.put(MainScreenController());
@@ -125,9 +124,10 @@ class MainScreen extends StatelessWidget {
                 ) //Pembeli
                 : mscreencontroller.Role.value == 'petani'
                 ? Navigator(
+
                   key: controller.addProduct,
                   onGenerateRoute:
-                      (settings) => GetPageRoute(page: () => buildProfileView()),
+                      (settings) => GetPageRoute(page: () => View_Catalog()),
                 )
                 : Navigator(
                   key: controller.lihatpenawaran,
