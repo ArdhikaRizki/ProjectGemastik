@@ -17,6 +17,7 @@ class Controller_Catalog extends GetxController {
 
   // Fungsi untuk mengambil data katalog
   void fetchCatalog() async {
+    print("Mengambil data katalog");
     try {
       isLoading.value = true;
       QuerySnapshot querySnapshot = await catalog.get();

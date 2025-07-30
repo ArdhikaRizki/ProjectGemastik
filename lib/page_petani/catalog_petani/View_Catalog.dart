@@ -108,6 +108,7 @@ class View_Catalog extends StatelessWidget {
         color: const Color(0xFFF5F5F5), // Warna sama dengan background body
         child: ElevatedButton(
           onPressed: () {
+            Get.toNamed('/addCatalog');
             // Logika untuk menambah produk
           },
           style: ElevatedButton.styleFrom(

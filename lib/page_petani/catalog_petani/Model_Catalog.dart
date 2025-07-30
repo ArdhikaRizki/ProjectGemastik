@@ -17,6 +17,7 @@ class Model_Catalog {
     required this.harga, // Nama field diubah menjadi harga
   });
 
+
   // Factory constructor yang sudah diperbaiki dan lebih aman
   factory Model_Catalog.fromSnapshot(DocumentSnapshot doc) {
     // Ambil data sebagai Map
