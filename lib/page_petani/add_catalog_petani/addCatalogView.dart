@@ -156,7 +156,6 @@ class addCatalogView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            ElevatedButton(onPressed: (){Get.back();}, child: Text("back")),
             // --- Tombol Submit ---
             SizedBox(
               width: double.infinity,
