@@ -161,6 +161,19 @@ class addCatalogView extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
+                  if (controller.selectedImages.isEmpty ||
+                      nameC.text.isEmpty ||
+                      descC.text.isEmpty ||
+                      priceC.text.isEmpty
+                  ) {
+                    Get.snackbar(
+                      "Error",
+                      "Semua field harus diisi dan minimal satu foto harus dipilih.",
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                    return;
+                  }
                   final imageUrls = await controller.uploadImages();
                   controller.addProductToFirestore(
                     name: nameC.text,
