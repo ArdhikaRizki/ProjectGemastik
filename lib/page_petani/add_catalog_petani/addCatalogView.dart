@@ -175,7 +175,7 @@ class addCatalogView extends StatelessWidget {
                     return;
                   }
                   final imageUrls = await controller.uploadImages();
-                  controller.addProductToFirestore(
+                  await controller.addProductToFirestore(
                     name: nameC.text,
                     desc: descC.text,
                     price: priceC.text,
