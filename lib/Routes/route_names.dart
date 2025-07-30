@@ -4,5 +4,6 @@ class RouteNames {
   static String product= '/product';
   static String profile= '/profile';
   static String addCatalog = '/addCatalog';
+  static String applyCatalog = '/applyCatalog';
 
 }

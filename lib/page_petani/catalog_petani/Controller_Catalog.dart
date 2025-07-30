@@ -55,4 +55,12 @@ class Controller_Catalog extends GetxController {
       print("Error saat menambah produk: $e");
     }
   }
+  void deleteProduct(String id) async {
+    try {
+      await catalog.doc(id).delete();
+      fetchCatalog(); // Refresh daftar setelah menghapus produk
+    } catch (e) {
+      print("Error saat menghapus produk: $e");
+    }
+  }
 }

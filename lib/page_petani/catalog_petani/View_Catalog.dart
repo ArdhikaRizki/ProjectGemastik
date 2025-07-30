@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:project_gemastik/Routes/route_names.dart';
 
 import 'Controller_Catalog.dart';
 
@@ -14,7 +15,9 @@ class View_Catalog extends StatelessWidget {
     final Controller_Catalog controller = Get.put(Controller_Catalog());
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5), // Warna latar belakang abu-abu muda
+      backgroundColor: const Color(
+        0xFFF5F5F5,
+      ), // Warna latar belakang abu-abu muda
       appBar: AppBar(
         backgroundColor: const Color(0xFF018241), // Warna hijau AppBar
         foregroundColor: Colors.white,
@@ -32,70 +35,197 @@ class View_Catalog extends StatelessWidget {
           itemBuilder: (context, index) {
             final product = controller.productList[index];
             // --- KODE UNTUK KARTU PRODUK DIMASUKKAN LANGSUNG DI SINI ---
-            return Card(
-              margin: const EdgeInsets.only(bottom: 16.0),
-              elevation: 2,
-              shadowColor: Colors.black.withOpacity(0.1),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  children: [
-                    // Gambar Produk
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        product.imageUrl.first,
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            width: 80,
-                            height: 80,
-                            color: Colors.grey[200],
-                            child: const Icon(Icons.image_not_supported, color: Colors.grey),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    // Detail Produk
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            product.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            return GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder:
+                      (dialogContext) => AlertDialog(
+                        title: Text(product.name),
+                        content: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Center(
+                                child: SizedBox(
+                                  height: 150,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.network(
+                                      product.imageUrl.first,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text("Deskripsi: ${product.desc}"),
+                              Text("Harga: ${product.harga}"),
+                            ],
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            product.desc,
-                            style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            product.harga.toString(),
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(dialogContext).pop(),
+                            child: const Text("Tutup"),
                           ),
                         ],
                       ),
-                    ),
-                    // Tombol Beli
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF018241),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                );
+              },
+              child: Card(
+                margin: const EdgeInsets.only(bottom: 16.0),
+                elevation: 2,
+                shadowColor: Colors.black.withOpacity(0.1),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Gambar Produk
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          product.imageUrl.first,
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: 80,
+                              height: 80,
+                              color: Colors.grey[200],
+                              child: const Icon(
+                                Icons.image_not_supported,
+                                color: Colors.grey,
+                              ),
+                            );
+                          },
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
                       ),
-                      child: const Text('NUNUA'),
-                    ),
-                  ],
+                      const SizedBox(width: 16),
+                      // Detail Produk + Tombol
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              product.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              product.desc,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              product.harga.toString(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Get.defaultDialog(
+                                        title: "Konfirmasi Hapus",
+                                        middleText:
+                                            "Apakah Anda yakin ingin menghapus produk ini?",
+                                        textConfirm: "Hapus",
+                                        textCancel: "Batal",
+                                        confirmTextColor: Colors.white,
+                                        onConfirm: () {
+                                          Get.back(); //
+                                          print(
+                                            "Id Documen produk: ${product.docId}",
+                                          );
+                                          controller.deleteProduct(
+                                            product.docId,
+                                          );
+                                          Get.snackbar(
+                                            "Berhasil",
+                                            "Produk berhasil dihapus",
+                                            snackPosition: SnackPosition.TOP,
+                                          );
+                                        },
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8,
+                                      ),
+                                      minimumSize: Size.zero,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'Hapus',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Get.toNamed(
+                                        RouteNames.applyCatalog,
+                                        arguments: {
+                                          'id': product.docId,
+                                          'name': product.name,
+                                          'imageUrl': product.imageUrl,
+                                          'desc': product.desc,
+                                          'harga': product.harga,
+                                        },
+                                      );
+                                      // Logika untuk mengarahkan ke halaman apply
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFF018241),
+                                      foregroundColor: Colors.white,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8,
+                                      ),
+                                      minimumSize: Size.zero,
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'Apply',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

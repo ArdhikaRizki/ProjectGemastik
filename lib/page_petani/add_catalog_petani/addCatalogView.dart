@@ -116,7 +116,7 @@ class addCatalogView extends StatelessWidget {
             TextField(
               controller: nameC,
               decoration: InputDecoration(
-                hintText: 'apel',
+                hintText: 'Nama Produk',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -132,7 +132,7 @@ class addCatalogView extends StatelessWidget {
               controller: priceC,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                hintText: '10.000',
+                hintText: 'Rupiah',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -147,7 +147,7 @@ class addCatalogView extends StatelessWidget {
             TextField(
               controller: descC,
               decoration: InputDecoration(
-                hintText: 'Apel Enak dari Malang',
+                hintText: 'Deskripsi Produk',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
