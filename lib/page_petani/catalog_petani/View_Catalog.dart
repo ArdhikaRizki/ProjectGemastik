@@ -61,44 +61,52 @@ class View_Catalog extends StatelessWidget {
                             children: [
                               Center(
                                 child: SizedBox(
-                                  height: 150,
-                                  child: Stack(
+                                  height: 200,
+                                  child: Column(
                                     children: [
-                                      CarouselSlider.builder(
-                                        itemCount: product.imageUrl.length,
-                                        itemBuilder: (context, index, realIndex) {
-                                          final url = product.imageUrl[index];
-                                          return ClipRRect(
-                                            child: Image.network(
-                                              url,
-                                              fit: BoxFit.cover,
-                                              width: double.infinity,
-                                            ),
-                                          );
-                                        },
-                                        options: CarouselOptions(
-                                          height: 150.0,
-                                          viewportFraction: 1.0,
-                                          enlargeCenterPage: false,
-                                          // Panggil method dari controller saat halaman berubah.
-                                          onPageChanged: (index, reason) {
-                                            controller.onPageChanged(index);
+                                      Expanded(
+                                        child: CarouselSlider.builder(
+                                          itemCount: product.imageUrl.length,
+                                          itemBuilder: (
+                                            context,
+                                            index,
+                                            realIndex,
+                                          ) {
+                                            final url = product.imageUrl[index];
+                                            return ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              child: Image.network(
+                                                url,
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                              ),
+                                            );
                                           },
+                                          options: CarouselOptions(
+                                            viewportFraction: 1.0,
+                                            enlargeCenterPage: false,
+                                            onPageChanged: (index, reason) {
+                                              controller.onPageChanged(index);
+                                            },
+                                          ),
                                         ),
                                       ),
-                                      Positioned(
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 20.0,
-                                        // Bungkus widget yang perlu update dengan Obx.
-                                        child: Obx(
-                                              () => Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: List.generate(product.imageUrl.length, (index) {
-                                              // Bandingkan dengan nilai dari controller.
+                                      const SizedBox(height: 8),
+                                      Obx(
+                                        () => Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: List.generate(
+                                            product.imageUrl.length,
+                                            (index) {
                                               return _buildIndicator(
-                                                  index == controller.activeIndex.value);
-                                            }),
+                                                index ==
+                                                    controller
+                                                        .activeIndex
+                                                        .value,
+                                              );
+                                            },
                                           ),
                                         ),
                                       ),
