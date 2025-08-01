@@ -5,7 +5,6 @@ import '../../LoginRegister/Controlller/SignInUpController.dart';
 import '../../LoginRegister/Model/UserModel.dart';
 import '../Controller/profileController.dart';
 
-
 // --- WIDGET HALAMAN PROFIL ---
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
@@ -30,7 +29,8 @@ class _ProfilePageState extends State<ProfileView> {
   String? _imageUrl; // Variabel untuk menyimpan URL gambar dari input
   bool _safeMode = false;
   String? _editingField;
-  String _role = "loading"; // Ganti dengan logika yang sesuai untuk mendapatkan role
+  String _role =
+      "loading"; // Ganti dengan logika yang sesuai untuk mendapatkan role
   @override
   void initState() {
     super.initState();
@@ -40,12 +40,10 @@ class _ProfilePageState extends State<ProfileView> {
 
   /// Mengambil data dari controller dan mengatur nilai awal untuk semua field.
   Future<void> _loadInitialData() async {
-
     UserModel userdata = await controller.getUserData();
     _role = userdata.role; // Ambil role dari userdata
     // Pastikan widget masih ada sebelum memanggil setState
     if (mounted) {
-
       setState(() {
         _nameController.text = userdata.name;
         _emailController.text = userdata.email;
@@ -53,7 +51,6 @@ class _ProfilePageState extends State<ProfileView> {
         _dobController.text = '30 Desember 2000';
         _genderController.text = 'Waria';
         _phoneController.text = userdata.phoneNumber;
-
       });
     }
   }
@@ -95,9 +92,7 @@ class _ProfilePageState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pengaturan Profil'),
-      ),
+      appBar: AppBar(title: const Text('Pengaturan Profil')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -105,10 +100,9 @@ class _ProfilePageState extends State<ProfileView> {
           children: [
             Text(
               'Ubah Biodata Diri',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
             _buildProfileCard(),
@@ -147,27 +141,40 @@ class _ProfilePageState extends State<ProfileView> {
           const Divider(height: 32),
           Text(
             'Ubah Kontak',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           _buildInfoRow('Email', _emailController, 'email', isVerified: true),
-          _buildInfoRow('Nomor HP', _phoneController, 'phone', isVerified: true),
+          _buildInfoRow(
+            'Nomor HP',
+            _phoneController,
+            'phone',
+            isVerified: true,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
             child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
                   width: 80,
-                  child: Text("Sebagai", style: TextStyle(color: Colors.grey[600])),
+                  child: Text(
+                    "Sebagai",
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
                 ),
-                  Text(_role.toUpperCase(), style: TextStyle(color: Color(0xFF00AA5B), fontWeight: FontWeight.bold))
-                ]
-            )
-          )
+                Text(
+                  _role.toUpperCase(),
+                  style: TextStyle(
+                    color: Color(0xFF00AA5B),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -175,18 +182,20 @@ class _ProfilePageState extends State<ProfileView> {
 
   // PERBAIKAN UTAMA ADA DI SINI
   Widget _buildProfileImageSection() {
-      ImageProvider backgroundImage;
+    ImageProvider backgroundImage;
     if (_imageUrl != null && _imageUrl!.isNotEmpty) {
       // Buat NetworkImage tanpa key
       backgroundImage = NetworkImage(_imageUrl!);
     } else {
       // Gambar placeholder default
-      backgroundImage = const NetworkImage('https://placehold.co/400x400/FF5722/FFFFFF?text=R');
+      backgroundImage = const NetworkImage(
+        'https://placehold.co/400x400/FF5722/FFFFFF?text=R',
+      );
     }
 
     return Column(
       children: [
-        Obx((){
+        Obx(() {
           backgroundImage.evict();
           return CircleAvatar(
             // PERBAIKAN: Tempatkan UniqueKey() di sini, pada widget CircleAvatar
@@ -198,9 +207,12 @@ class _ProfilePageState extends State<ProfileView> {
         }),
         const SizedBox(height: 16),
         OutlinedButton.icon(
-          // 1. Ubah onPressed menjadi async
           onPressed: () async {
+            // 1. Wait for the image to be picked and uploaded
             await controller.pickImage();
+
+            // 2. Refresh the user data on the screen
+            await _loadInitialData();
           },
           icon: const Icon(Icons.photo_camera_outlined),
           label: const Text('Ubah Foto'),
@@ -216,8 +228,11 @@ class _ProfilePageState extends State<ProfileView> {
   }
 
   Widget _buildInfoRow(
-      String label, TextEditingController controller, String fieldKey,
-      {bool isVerified = false}) {
+    String label,
+    TextEditingController controller,
+    String fieldKey, {
+    bool isVerified = false,
+  }) {
     bool isEditing = _editingField == fieldKey;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -229,29 +244,37 @@ class _ProfilePageState extends State<ProfileView> {
             child: Text(label, style: TextStyle(color: Colors.grey[600])),
           ),
           Expanded(
-            child: isEditing
-                ? TextField(controller: controller, autofocus: true)
-                : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(controller.text,
-                    style: const TextStyle(fontWeight: FontWeight.w500)),
-                if (isVerified) ...[
-                  const SizedBox(height: 4),
-                  const Text('Terverifikasi',
-                      style: TextStyle(
-                          color: Color(0xFF00AA5B),
-                          fontWeight: FontWeight.bold)),
-                ]
-              ],
-            ),
+            child:
+                isEditing
+                    ? TextField(controller: controller, autofocus: true)
+                    : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          controller.text,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        if (isVerified) ...[
+                          const SizedBox(height: 4),
+                          const Text(
+                            'Terverifikasi',
+                            style: TextStyle(
+                              color: Color(0xFF00AA5B),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
           ),
           TextButton(
             onPressed: () => _handleEditToggle(fieldKey),
             child: Text(
               isEditing ? 'Simpan' : 'Ubah',
               style: const TextStyle(
-                  color: Color(0xFF00AA5B), fontWeight: FontWeight.bold),
+                color: Color(0xFF00AA5B),
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -272,14 +295,17 @@ class _ProfilePageState extends State<ProfileView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Safe Mode',
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold)),
+                Text(
+                  'Safe Mode',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(height: 4),
-                Text('Menyaring hasil pencarian.',
-                    style: TextStyle(color: Colors.grey[600])),
+                Text(
+                  'Menyaring hasil pencarian.',
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
               ],
             ),
           ),
@@ -303,11 +329,12 @@ class _ProfilePageState extends State<ProfileView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Keluar',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold)),
+          Text(
+            'Keluar',
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
@@ -320,7 +347,10 @@ class _ProfilePageState extends State<ProfileView> {
                 Get.back();
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text('Keluar', style: TextStyle(color: Colors.white)),
+              child: const Text(
+                'Keluar',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
         ],
