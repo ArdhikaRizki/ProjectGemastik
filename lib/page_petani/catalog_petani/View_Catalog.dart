@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:project_gemastik/Routes/route_names.dart';
-
+import 'package:carousel_slider/carousel_slider.dart';
 import 'Controller_Catalog.dart';
 
 class View_Catalog extends StatelessWidget {
@@ -13,6 +13,18 @@ class View_Catalog extends StatelessWidget {
   Widget build(BuildContext context) {
     // Inisialisasi controller menggunakan Get.put()
     final Controller_Catalog controller = Get.put(Controller_Catalog());
+
+    Widget _buildIndicator(bool isActive) {
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4.0),
+        width: isActive ? 12.0 : 8.0,
+        height: isActive ? 12.0 : 8.0,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: isActive ? Colors.green : Colors.grey,
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: const Color(
@@ -50,12 +62,47 @@ class View_Catalog extends StatelessWidget {
                               Center(
                                 child: SizedBox(
                                   height: 150,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      product.imageUrl.first,
-                                      fit: BoxFit.cover,
-                                    ),
+                                  child: Stack(
+                                    children: [
+                                      CarouselSlider.builder(
+                                        itemCount: product.imageUrl.length,
+                                        itemBuilder: (context, index, realIndex) {
+                                          final url = product.imageUrl[index];
+                                          return ClipRRect(
+                                            child: Image.network(
+                                              url,
+                                              fit: BoxFit.cover,
+                                              width: double.infinity,
+                                            ),
+                                          );
+                                        },
+                                        options: CarouselOptions(
+                                          height: 150.0,
+                                          viewportFraction: 1.0,
+                                          enlargeCenterPage: false,
+                                          // Panggil method dari controller saat halaman berubah.
+                                          onPageChanged: (index, reason) {
+                                            controller.onPageChanged(index);
+                                          },
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 20.0,
+                                        // Bungkus widget yang perlu update dengan Obx.
+                                        child: Obx(
+                                              () => Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: List.generate(product.imageUrl.length, (index) {
+                                              // Bandingkan dengan nilai dari controller.
+                                              return _buildIndicator(
+                                                  index == controller.activeIndex.value);
+                                            }),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),

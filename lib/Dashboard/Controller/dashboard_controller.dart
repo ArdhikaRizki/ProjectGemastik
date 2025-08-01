@@ -23,8 +23,7 @@ class DashboardController extends GetxController {
     fetchUserRole();
     fetchData();
   }
-  /// Mengambil data peran (role) dari pengguna yang sedang login.
-  /// Mengembalikan role sebagai String, atau null jika tidak ditemukan.
+
   Future<String?> getUserRole() async {
     try {
       // 1. Dapatkan pengguna yang sedang login saat ini.
@@ -66,7 +65,6 @@ class DashboardController extends GetxController {
       userRole.value = role;
     }
   }
-
 
   void fetchData() {
     products

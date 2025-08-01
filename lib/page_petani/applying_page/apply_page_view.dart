@@ -1,12 +1,35 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+
+class ApplyPageViewController extends GetxController {
+  var activeIndex = 0.obs;
+
+  void onPageChanged(int index) {
+    activeIndex.value = index;
+  }
+}
+
+
 class Applypageview extends StatelessWidget {
-  const Applypageview({super.key});
+
+  Applypageview({super.key});
+  final _controller = Get.put(ApplyPageViewController());
+
+  Widget _buildIndicator(bool isActive) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4.0),
+      width: isActive ? 12.0 : 8.0,
+      height: isActive ? 12.0 : 8.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: isActive ? Colors.green : Colors.grey,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +60,47 @@ class Applypageview extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (imageUrl.isNotEmpty)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    imageUrl.first,
-                    height: 150,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                Stack(
+                  children: [
+                    CarouselSlider.builder(
+                      itemCount: imageUrl.length,
+                      itemBuilder: (context, index, realIndex) {
+                        final url = imageUrl[index];
+                        return ClipRRect(
+                          child: Image.network(
+                            url,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+                        );
+                      },
+                      options: CarouselOptions(
+                        height: 150.0,
+                        viewportFraction: 1.0,
+                        enlargeCenterPage: false,
+                        // Panggil method dari controller saat halaman berubah.
+                        onPageChanged: (index, reason) {
+                          _controller.onPageChanged(index);
+                        },
+                      ),
+                    ),
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 20.0,
+                      // Bungkus widget yang perlu update dengan Obx.
+                      child: Obx(
+                            () => Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(imageUrl.length, (index) {
+                            // Bandingkan dengan nilai dari controller.
+                            return _buildIndicator(
+                                index == _controller.activeIndex.value);
+                          }),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               const SizedBox(height: 12),
               Text(

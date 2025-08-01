@@ -16,6 +16,12 @@ class Controller_Catalog extends GetxController {
     fetchCatalog();
   }
 
+  var activeIndex = 0.obs;
+
+  void onPageChanged(int index) {
+    activeIndex.value = index;
+  }
+
   // Fungsi untuk mengambil data katalog
   void fetchCatalog() async {
   print("Mengambil data katalog");
