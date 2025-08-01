@@ -59,7 +59,8 @@ class addCatalogController extends GetxController {
           Uri.parse("http://13.213.29.164/upload.php"),
         );
 
-        final fileName = "${userId}_catalog_$i";
+        final fileExtension = path.extension(imageFile.path);
+        final fileName = "${userId}_produk_${DateTime.now().millisecondsSinceEpoch}_$i$fileExtension";
 
         if (kIsWeb) {
           final bytes = await imageFile.readAsBytes();
