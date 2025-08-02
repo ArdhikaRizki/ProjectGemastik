@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'Add_Catalog_Controller.dart';
 
-
 class addCatalogView extends StatelessWidget {
   addCatalogView({Key? key}) : super(key: key);
 
@@ -38,76 +37,82 @@ class addCatalogView extends StatelessWidget {
             // --- Bagian "Add Photos" ---
             const Text(
               'Add Photos',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             // Ikon untuk menambah foto
-            Obx(() => SizedBox(
-              height: 100,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: controller.selectedImages.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == controller.selectedImages.length) {
-                    // Tombol untuk menambah gambar
-                    return GestureDetector(
-                      onTap: () => _showImageSourceDialog(context, controller),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: primaryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: primaryColor.withOpacity(0.5)),
-                        ),
-                        child: const Icon(
-                          Icons.add_photo_alternate_rounded,
-                          color: primaryColor,
-                          size: 40,
-                        ),
-                      ),
-                    );
-                  }
-                  // Pratinjau gambar yang dipilih
-                  final imageFile = controller.selectedImages[index];
-                  return Container(
-                    width: 100,
-                    height: 100,
-                    margin: const EdgeInsets.only(right: 8.0),
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.file(
-                            File(imageFile.path),
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Positioned(
-                          top: 0,
-                          right: 0,
-                          child: GestureDetector(
-                            onTap: () => controller.removeImage(index),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.black54,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(Icons.close, color: Colors.white, size: 18),
+            Obx(
+              () => SizedBox(
+                height: 100,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.selectedImages.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == controller.selectedImages.length) {
+                      // Tombol untuk menambah gambar
+                      return GestureDetector(
+                        onTap:
+                            () => _showImageSourceDialog(context, controller),
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: primaryColor.withOpacity(0.5),
                             ),
                           ),
+                          child: const Icon(
+                            Icons.add_photo_alternate_rounded,
+                            color: primaryColor,
+                            size: 40,
+                          ),
                         ),
-                      ],
-                    ),
-                  );
-                },
+                      );
+                    }
+                    // Pratinjau gambar yang dipilih
+                    final imageFile = controller.selectedImages[index];
+                    return Container(
+                      width: 100,
+                      height: 100,
+                      margin: const EdgeInsets.only(right: 8.0),
+                      child: Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.file(
+                              File(imageFile.path),
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: () => controller.removeImage(index),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.black54,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
-            )),
+            ),
             const SizedBox(height: 16),
             Text("Nama Produk"),
             const SizedBox(height: 6),
@@ -121,7 +126,9 @@ class addCatalogView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 14),
+                  horizontal: 16,
+                  vertical: 14,
+                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -137,7 +144,9 @@ class addCatalogView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 14),
+                  horizontal: 16,
+                  vertical: 14,
+                ),
               ),
             ),
             const SizedBox(height: 10),
@@ -152,7 +161,9 @@ class addCatalogView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 14),
+                  horizontal: 16,
+                  vertical: 14,
+                ),
               ),
             ),
             const SizedBox(height: 32),
@@ -161,36 +172,11 @@ class addCatalogView extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
-                  if (controller.selectedImages.isEmpty ||
-                      nameC.text.isEmpty ||
-                      descC.text.isEmpty ||
-                      priceC.text.isEmpty
-                  ) {
-                    Get.snackbar(
-                      "Error",
-                      "Semua field harus diisi dan minimal satu foto harus dipilih.",
-                      backgroundColor: Colors.red,
-                      colorText: Colors.white,
-                    );
-                    return;
-                  }
-                  final imageUrls = await controller.uploadImages();
-                  if (imageUrls.isEmpty) {
-                    Get.snackbar(
-                      "Error",
-                      "Gagal mengunggah gambar.",
-                      backgroundColor: Colors.red,
-                      colorText: Colors.white,
-                    );
-                    return;
-                  }
-                  await controller.addProductToFirestore(
+                  controller.saveProduct(
                     name: nameC.text,
                     desc: descC.text,
                     price: priceC.text,
-                    imageUrls: imageUrls,
                   );
-                  Get.back();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor,
@@ -203,10 +189,7 @@ class addCatalogView extends StatelessWidget {
                 ),
                 child: const Text(
                   'Tambah',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -215,33 +198,38 @@ class addCatalogView extends StatelessWidget {
       ),
     );
   }
-  Future<void> _showImageSourceDialog(BuildContext context, addCatalogController controller) async {
+
+  Future<void> _showImageSourceDialog(
+    BuildContext context,
+    addCatalogController controller,
+  ) async {
     await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Pilih Sumber Gambar"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text("Galeri (Pilih Banyak)"),
-              onTap: () {
-                Navigator.of(context).pop();
-                controller.pickMultiImageFromGallery();
-              },
+      builder:
+          (context) => AlertDialog(
+            title: const Text("Pilih Sumber Gambar"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.photo_library),
+                  title: const Text("Galeri (Pilih Banyak)"),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    controller.pickMultiImageFromGallery();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text("Kamera (Pilih Satu)"),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    controller.pickSingleImageFromCamera();
+                  },
+                ),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text("Kamera (Pilih Satu)"),
-              onTap: () {
-                Navigator.of(context).pop();
-                controller.pickSingleImageFromCamera();
-              },
-            ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 }

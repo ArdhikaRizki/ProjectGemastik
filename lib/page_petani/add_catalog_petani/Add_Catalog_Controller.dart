@@ -15,6 +15,7 @@ class addCatalogController extends GetxController {
   var selectedImages = <XFile>[].obs;
   var isUploading = false.obs;
   final controllerlistcatalog = Get.find<Controller_Catalog>();
+
   /// Fungsi untuk memilih BANYAK gambar dari galeri.
   Future<void> pickMultiImageFromGallery() async {
     final List<XFile> pickedFiles = await picker.pickMultiImage();
@@ -37,12 +38,22 @@ class addCatalogController extends GetxController {
   Future<List<String>> uploadImages() async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) {
-      Get.snackbar("Error", "Anda harus login terlebih dahulu.", backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar(
+        "Error",
+        "Anda harus login terlebih dahulu.",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
       return [];
     }
 
     if (selectedImages.isEmpty) {
-      Get.snackbar("Error", "Silakan pilih setidaknya satu gambar.", backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar(
+        "Error",
+        "Silakan pilih setidaknya satu gambar.",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
       return [];
     }
 
@@ -60,7 +71,8 @@ class addCatalogController extends GetxController {
         );
 
         final fileExtension = path.extension(imageFile.path);
-        final fileName = "${userId}_produk_${DateTime.now().millisecondsSinceEpoch}_$i$fileExtension";
+        final fileName =
+            "${userId}_produk_${DateTime.now().millisecondsSinceEpoch}_$i$fileExtension";
 
         if (kIsWeb) {
           final bytes = await imageFile.readAsBytes();
@@ -69,7 +81,11 @@ class addCatalogController extends GetxController {
           );
         } else {
           request.files.add(
-            await http.MultipartFile.fromPath('image', imageFile.path, filename: fileName),
+            await http.MultipartFile.fromPath(
+              'image',
+              imageFile.path,
+              filename: fileName,
+            ),
           );
         }
 
@@ -83,31 +99,35 @@ class addCatalogController extends GetxController {
           print("Gambar ${i + 1} berhasil diunggah: $imageUrl");
         } else {
           final responseBody = await response.stream.bytesToString();
-          Get.snackbar("Error", "Gagal mengunggah gambar ${i + 1}. Pesan: $responseBody", backgroundColor: Colors.red, colorText: Colors.white);
+          Get.snackbar(
+            "Error",
+            "Gagal mengunggah gambar ${i + 1}. Pesan: $responseBody",
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
           return []; // Hentikan proses jika satu gambar gagal
         }
       }
 
       // Jika semua gambar berhasil diunggah
-      Get.snackbar(
-        "Sukses",
-        "Semua ${uploadedImageUrls.length} gambar berhasil diunggah 🎉",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      //
 
       selectedImages.clear(); // Kosongkan daftar setelah berhasil
       return uploadedImageUrls;
-
     } catch (e) {
-      Get.snackbar("Error", "Terjadi error: $e", backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar(
+        "Error",
+        "Terjadi error: $e",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
       return [];
     } finally {
       isUploading.value = false;
     }
   }
 
-  Future<void> addProductToFirestore({
+  Future<bool> addProductToFirestore({
     required String name,
     required String desc,
     required String price,
@@ -117,7 +137,7 @@ class addCatalogController extends GetxController {
     if (uid == null) {
       Get.snackbar("Error", "Pengguna tidak ditemukan.");
       isUploading.value = false;
-      return;
+      return false;
     }
 
     try {
@@ -134,26 +154,83 @@ class addCatalogController extends GetxController {
       };
 
       // Tambahkan dokumen baru ke collection 'produk_petani'
-      await FirebaseFirestore.instance.collection('produk_petani').add(productData);
+      await FirebaseFirestore.instance
+          .collection('produk_petani')
+          .add(productData);
 
+      // Get.snackbar(
+      //   "Sukses",
+      //   "Produk '$name' berhasil ditambahkan!",
+      //   backgroundColor: Colors.green,
+      //   colorText: Colors.white,
+      // );
+
+      selectedImages.clear(); // Kosongkan daftar gambar setelah berhasil
+      // Anda bisa menambahkan navigasi kembali ke halaman sebelumnya di sini
+      // Get.back();
+      return true;
+    } catch (e) {
+      Get.snackbar("Error", "Gagal menyimpan produk: $e");
+      return false;
+    }
+    // finally {
+    // isUploading.value = false;
+    // controllerlistcatalog.fetchCatalog(); // Refresh daftar setelah menambah produk baru
+    // Get.back();
+    // }
+  }
+
+  Future<void> saveProduct({
+    required String name,
+    required String desc,
+    required String price,
+  }) async {
+    // 1. Validasi Input (pindahkan dari view)
+    if (selectedImages.isEmpty ||
+        name.isEmpty ||
+        desc.isEmpty ||
+        price.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Semua field harus diisi dan minimal satu foto harus dipilih.",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return; // Hentikan fungsi jika validasi gagal
+    }
+
+    isUploading.value = true; // Mulai loading
+
+    // 2. Upload Gambar
+    final imageUrls = await uploadImages();
+
+    // 3. Cek Hasil Upload
+    if (imageUrls.isEmpty) {
+      // Snackbar sudah ditampilkan dari dalam fungsi uploadImages,
+      // jadi kita hanya perlu menghentikan proses.
+      isUploading.value = false; // Hentikan loading
+      return; // Hentikan fungsi jika upload gagal
+    }
+
+    // 4. Simpan ke Firestore (jika semua berhasil)
+    // Fungsi ini sudah memiliki try-catch-finally dan Get.back() di dalamnya
+    final bool isSuccess = await addProductToFirestore(
+      name: name,
+      desc: desc,
+      price: price,
+      imageUrls: imageUrls,
+    );
+    isUploading.value = false; // Hentikan loading
+    if (isSuccess) {
+      controllerlistcatalog.fetchCatalog();
+      Get.back();
       Get.snackbar(
         "Sukses",
         "Produk '$name' berhasil ditambahkan!",
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
-
-      selectedImages.clear(); // Kosongkan daftar gambar setelah berhasil
-      // Anda bisa menambahkan navigasi kembali ke halaman sebelumnya di sini
-      // Get.back();
-
-    } catch (e) {
-      Get.snackbar("Error", "Gagal menyimpan produk: $e");
-    } finally {
-      isUploading.value = false;
-      controllerlistcatalog.fetchCatalog(); // Refresh daftar setelah menambah produk baru
-      Get.back();
     }
-  }
 
+  }
 }

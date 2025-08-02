@@ -197,6 +197,9 @@ class View_Catalog extends StatelessWidget {
                                 Expanded(
                                   child: ElevatedButton(
                                     onPressed: () {
+                                      if (Get.isSnackbarOpen) {
+                                        Get.closeCurrentSnackbar();
+                                      }
                                       Get.defaultDialog(
                                         title: "Konfirmasi Hapus",
                                         middleText:
@@ -204,19 +207,18 @@ class View_Catalog extends StatelessWidget {
                                         textConfirm: "Hapus",
                                         textCancel: "Batal",
                                         confirmTextColor: Colors.white,
-                                        onConfirm: () {
-                                          Get.back(); //
-                                          print(
-                                            "Id Documen produk: ${product.docId}",
-                                          );
-                                          controller.deleteProduct(
-                                            product.docId,
-                                          );
-                                          Get.snackbar(
-                                            "Berhasil",
-                                            "Produk berhasil dihapus",
-                                            snackPosition: SnackPosition.TOP,
-                                          );
+                                        onConfirm: () async {
+                                          Get.back(); // Tutup dialog konfirmasi
+                                          controller
+                                              .deleteProduct(product.docId)
+                                              .then((_) {
+                                                Get.snackbar(
+                                                  "Berhasil",
+                                                  "Produk berhasil dihapus",
+                                                  snackPosition:
+                                                      SnackPosition.TOP,
+                                                );
+                                              });
                                         },
                                       );
                                     },
