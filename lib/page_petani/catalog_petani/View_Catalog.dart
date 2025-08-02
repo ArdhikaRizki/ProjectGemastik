@@ -210,7 +210,7 @@ class View_Catalog extends StatelessWidget {
                                         onConfirm: () async {
                                           Get.back(); // Tutup dialog konfirmasi
                                           controller
-                                              .deleteProduct(product.docId)
+                                              .deleteProduct(product)
                                               .then((_) {
                                                 Get.snackbar(
                                                   "Berhasil",
