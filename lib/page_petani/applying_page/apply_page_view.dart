@@ -3,15 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-
-class ApplyPageViewController extends GetxController {
-  var activeIndex = 0.obs;
-
-  void onPageChanged(int index) {
-    activeIndex.value = index;
-  }
-}
+import 'apply_page_controller.dart';
 
 
 class Applypageview extends StatelessWidget {
@@ -103,13 +95,26 @@ class Applypageview extends StatelessWidget {
                   ],
                 ),
               const SizedBox(height: 12),
-              Text(
-                name,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF018241),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    name.toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF018241),
+                    ),
+                  ),
+                  Text(
+                    'Rp $harga',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF018241),
+                    ),
+                  )
+                ],
               ),
               const SizedBox(height: 8),
               Text(
@@ -119,14 +124,51 @@ class Applypageview extends StatelessWidget {
                   color: Colors.black87,
                 ),
               ),
+              const SizedBox(height: 16),
+              const Text("Daftar Koperasi", style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF018241),
+              ), ),
               const SizedBox(height: 8),
-              Text(
-                'Harga: Rp${harga.toString()}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
-              ),
+              Obx(() {
+                // Tampilkan loading indicator saat data sedang diambil
+                if (_controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                // Tampilkan pesan jika tidak ada koperasi yang ditemukan
+                if (_controller.cooperativeList.isEmpty) {
+                  return const Center(child: Text("Tidak ada pengguna dengan peran koperasi."));
+                }
+                // Tampilkan daftar koperasi
+                return Expanded(child: ListView.separated(
+                  itemCount: _controller.cooperativeList.length,
+                  // itemBuilder membangun setiap item (Card)
+                  itemBuilder: (context, index) {
+                    final cooperative = _controller.cooperativeList[index];
+                    return
+                      ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: (cooperative.urlfoto.isNotEmpty)
+                              ? NetworkImage(cooperative.urlfoto)
+                              : null,
+                          child: (cooperative.urlfoto.isEmpty)
+                              ? const Icon(Icons.person)
+                              : null,
+                        ),
+                        title: Text(cooperative.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text(cooperative.email),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                      );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      height: 1, // Tinggi garis
+                      color: Color.fromARGB(255, 224, 224, 224), // Warna garis
+                    );
+                  },
+                ));
+              }),
             ],
           ),
         ),

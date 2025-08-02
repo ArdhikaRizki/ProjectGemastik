@@ -175,6 +175,15 @@ class addCatalogView extends StatelessWidget {
                     return;
                   }
                   final imageUrls = await controller.uploadImages();
+                  if (imageUrls.isEmpty) {
+                    Get.snackbar(
+                      "Error",
+                      "Gagal mengunggah gambar.",
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                    return;
+                  }
                   await controller.addProductToFirestore(
                     name: nameC.text,
                     desc: descC.text,

@@ -56,7 +56,7 @@ class addCatalogController extends GetxController {
 
         var request = http.MultipartRequest(
           'POST',
-          Uri.parse("http://13.213.29.164/upload.php"),
+          Uri.parse("http://147.139.136.133/itemUpload.php"),
         );
 
         final fileExtension = path.extension(imageFile.path);
@@ -78,7 +78,7 @@ class addCatalogController extends GetxController {
         if (response.statusCode == 200) {
           final responseBody = await response.stream.bytesToString();
           final decodedBody = jsonDecode(responseBody);
-          final imageUrl = "http://13.213.29.164/${decodedBody['file_path']}";
+          final imageUrl = "http://147.139.136.133/${decodedBody['file_path']}";
           uploadedImageUrls.add(imageUrl);
           print("Gambar ${i + 1} berhasil diunggah: $imageUrl");
         } else {
