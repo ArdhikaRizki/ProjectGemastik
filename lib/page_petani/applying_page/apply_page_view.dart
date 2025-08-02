@@ -40,9 +40,9 @@ class Applypageview extends StatelessWidget {
         title: const Text('Apply Page'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Colors.green.shade50,
             borderRadius: BorderRadius.circular(12),
@@ -158,7 +158,23 @@ class Applypageview extends StatelessWidget {
                         ),
                         title: Text(cooperative.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Text(cooperative.email),
-                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                        trailing: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF018241),
+                          ),
+                          onPressed: () async {
+                            // Panggil fungsi addPenawaran dari controller
+                            bool success = await _controller.addPenawaran(
+                              cooperative.id, // ID koperasi
+                              args['id'], // ID produk
+                              args['idPetani'], // ID petani
+                            );
+                            if (success) {
+                              Get.back(); // Kembali ke halaman sebelumnya jika sukses
+                            }
+                          },
+                          child: const Text("Tawar", style: TextStyle(color: Colors.white)),
+                        ),
                       );
                   },
                   separatorBuilder: (context, index) {

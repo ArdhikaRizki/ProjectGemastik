@@ -69,6 +69,7 @@ class profileController extends GetxController {
       final role = data['role'];
 
       return UserModel(
+        id: FirebaseAuth.instance.currentUser!.uid,
         name: nama ?? '',
         email: email ?? '',
         urlfoto: photoUrl ?? '',
@@ -76,7 +77,7 @@ class profileController extends GetxController {
         role: role ?? 'pembeli', // Default role if not set
       );
     } else {
-      return UserModel(name: '', email: '', urlfoto: '', phoneNumber: '', role: 'pembeli');
+      return UserModel(id: '' ,name: '', email: '', urlfoto: '', phoneNumber: '', role: 'pembeli');
     }
   }
 
@@ -109,11 +110,11 @@ class profileController extends GetxController {
 
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse("http://13.213.29.164/upload.php"),
+      Uri.parse("http://147.139.136.133/profileUpload.php"),
     );
 
 
-    final fileName = userId;
+    final fileName = "$userId.jpg";
 
     if (kIsWeb) {
       request.files.add(
@@ -140,7 +141,7 @@ class profileController extends GetxController {
         final responseBody = await response.stream.bytesToString();
         final decodedBody = jsonDecode(responseBody);
         print("Upload successful: $decodedBody");
-        final imageUrl = "http://13.213.29.164/${decodedBody['file_path']}";
+        final imageUrl = "http://147.139.136.133/${decodedBody['file_path']}";
         await updateImage(imageUrl);
         imageKey.value = UniqueKey();
 

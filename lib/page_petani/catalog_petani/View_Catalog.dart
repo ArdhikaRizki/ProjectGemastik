@@ -253,6 +253,7 @@ class View_Catalog extends StatelessWidget {
                                           'imageUrl': product.imageUrl,
                                           'desc': product.desc,
                                           'harga': product.harga,
+                                          'idPetani' : product.uid
                                         },
                                       );
                                       // Logika untuk mengarahkan ke halaman apply

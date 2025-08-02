@@ -47,4 +47,25 @@ class ApplyPageViewController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  Future<bool> addPenawaran(String idPetani, String IdKoperasi, String IdProduk) async {
+    try {
+      // 1. Buat Map data untuk penawaran
+      Map<String, dynamic> penawaranData = {
+        'IdPetani': idPetani,
+        'IdKoperasi': IdKoperasi,
+        'IdProduk': IdProduk,
+        'status': 'pending', // Status awal penawaran
+      };
+
+      await _firestore.collection('penawaran').add(penawaranData);
+
+      Get.snackbar("Sukses", "Penawaran berhasil dibuat.");
+      return true;
+    } catch (e) {
+      Get.snackbar("Error", "Gagal membuat penawaran: $e");
+      return false;
+    }
+  }
+
 }

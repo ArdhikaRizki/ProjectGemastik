@@ -158,13 +158,6 @@ class addCatalogController extends GetxController {
           .collection('produk_petani')
           .add(productData);
 
-      // Get.snackbar(
-      //   "Sukses",
-      //   "Produk '$name' berhasil ditambahkan!",
-      //   backgroundColor: Colors.green,
-      //   colorText: Colors.white,
-      // );
-
       selectedImages.clear(); // Kosongkan daftar gambar setelah berhasil
       // Anda bisa menambahkan navigasi kembali ke halaman sebelumnya di sini
       // Get.back();
