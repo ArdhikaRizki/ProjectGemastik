@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:project_gemastik/LoginRegister/SignInUpController.dart';
+import 'package:project_gemastik/page_koperasi/proses_tawaran/proses_tawaran_view.dart';
 import 'package:project_gemastik/page_petani/catalog_petani/View_Catalog.dart';
 import 'package:project_gemastik/profile/profile_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -100,7 +101,7 @@ class MainScreen extends StatelessWidget {
       const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
       const BottomNavigationBarItem(
         icon: Icon(Icons.add),
-        label: 'Add Product',
+        label: 'Lihat Penawaran',
       ),
       const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
     ];
@@ -133,7 +134,7 @@ class MainScreen extends StatelessWidget {
                   key: controller.lihatpenawaran,
                   onGenerateRoute:
                       (settings) =>
-                          GetPageRoute(page: () => buildProfileView()),
+                          GetPageRoute(page: () => ProsesTawaranView()),
                 ),
 
             //Profile Petani

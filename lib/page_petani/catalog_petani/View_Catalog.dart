@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:project_gemastik/page_petani/history_apply/history_view.dart';
 import 'package:project_gemastik/routes/route_names.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'Controller_Catalog.dart';
@@ -34,6 +35,12 @@ class View_Catalog extends StatelessWidget {
         backgroundColor: const Color(0xFF018241), // Warna hijau AppBar
         foregroundColor: Colors.white,
         title: const Text('Produk Mu'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () => Get.to(const HistoryView()),
+          ),
+        ],
         elevation: 0,
       ),
       // Gunakan Obx untuk membuat UI reaktif terhadap perubahan state
