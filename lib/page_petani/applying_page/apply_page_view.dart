@@ -165,9 +165,9 @@ class Applypageview extends StatelessWidget {
                           onPressed: () async {
                             // Panggil fungsi addPenawaran dari controller
                             bool success = await _controller.addPenawaran(
-                              cooperative.id, // ID koperasi
-                              args['id'], // ID produk
-                              args['idPetani'], // ID petani
+                              args['idPetani'], // ID koperasi
+                              cooperative.id,  // ID produk
+                              args['id'], // ID petani
                             );
                             if (success) {
                               Get.back(); // Kembali ke halaman sebelumnya jika sukses
