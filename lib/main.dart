@@ -5,11 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:project_gemastik/LoginRegister/Controlller/SignInUpController.dart';
+import 'package:project_gemastik/LoginRegister/SignInUpController.dart';
 import 'package:project_gemastik/MainScreen.dart';
-import 'package:project_gemastik/Routes/route_pages.dart';
+import 'package:project_gemastik/routes/route_pages.dart';
 import 'package:project_gemastik/Dashboard/View/dashboard_view.dart';
-import 'LoginRegister/View/RegisterView.dart';
+import 'LoginRegister/RegisterView.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           return GetMaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Agri Marketplace',
-            getPages: RoutesPage.page,
+            getPages: RoutePages.page,
             // initialRoute: snapshot.data != null ? RouteNames.home : RouteNames.SignInUp,
             home: Obx(() {
               if (authC.isRegistering.value) {

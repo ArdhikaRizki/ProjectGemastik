@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:project_gemastik/Dashboard/Model/product_model.dart';
 import 'package:project_gemastik/Dashboard/View/ProductPageView.dart';
 
-import '../../Routes/route_names.dart';
+import '../../routes/route_names.dart';
 
 
 class DashboardController extends GetxController {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:io';
-import '../../LoginRegister/Controlller/SignInUpController.dart';
-import '../../LoginRegister/Model/UserModel.dart';
-import '../Controller/profileController.dart';
+import '../LoginRegister/SignInUpController.dart';
+import '../LoginRegister/UserModel.dart';
+import 'profileController.dart';
 
 // --- WIDGET HALAMAN PROFIL ---
 class ProfileView extends StatefulWidget {

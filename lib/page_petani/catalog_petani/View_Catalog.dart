@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:project_gemastik/Routes/route_names.dart';
+import 'package:project_gemastik/routes/route_names.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'Controller_Catalog.dart';
 

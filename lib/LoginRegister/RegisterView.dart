@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../Controlller/SignInUpController.dart';
+import 'package:project_gemastik/LoginRegister/SignInUpController.dart';
 
 class Registerview extends GetView<SignInUpController> {
   final loginemailC = TextEditingController();
