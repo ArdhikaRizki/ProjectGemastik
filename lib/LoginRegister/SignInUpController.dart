@@ -60,12 +60,25 @@ class SignInUpController extends GetxController {
         colorText: Colors.white,
       );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-      // isRegistering.value = false;
+      isRegistering.value = false; 
+
+    String errorMessage = "Terjadi kesalahan. Silakan coba lagi.";
+    
+    if (e.code == 'weak-password') {
+      errorMessage = "Password terlalu lemah, gunakan minimal 6 karakter.";
+    } 
+    // TAMBAHKAN KONDISI INI
+    else if (e.code == 'email-already-in-use') {
+      errorMessage = "Email yang Anda masukkan sudah terdaftar.";
+    } 
+    else if (e.code == 'invalid-email') {
+      errorMessage = "Format email yang Anda masukkan tidak valid.";
+    }
+
+    Get.snackbar("Registrasi Gagal", errorMessage,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: const Color.fromARGB(255, 234, 18, 18),
+        colorText: Colors.white,);
     } catch (e) {
       print(e);
       isRegistering.value = false; 
@@ -79,11 +92,18 @@ class SignInUpController extends GetxController {
         password: password,
       );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
+      // if (e.code == 'user-not-found') {
+      //   print('No user found for that email.');
+      // } else if (e.code == 'wrong-password') {
+      //   print('Wrong password provided for that user.');
+      // }
+       Get.snackbar(
+      "Login Gagal",
+      "Email Atau Password Salah Silahkan coba lagi",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+    );
     }
   }
 
