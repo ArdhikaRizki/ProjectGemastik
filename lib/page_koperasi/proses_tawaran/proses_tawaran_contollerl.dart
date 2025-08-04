@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:project_gemastik/page_koperasi/proses_tawaran/proses_tawaran_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProsesTawaranContoller extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -91,4 +92,16 @@ class ProsesTawaranContoller extends GetxController {
       Get.snackbar("Error", "Gagal menolak tawaran: $e");
     }
   }
+
+  Future<void> urlWhatsApp(String phoneNumber) async {
+    print("Nomor telepon: ${phoneNumber.substring(1)}");
+    Uri url = Uri.parse('https://api.whatsapp.com/send?phone=62${phoneNumber.substring(1)}&text=Halo%20saya%20ingin%20berbicara%20tentang%20tawaran%20yang%20anda%20kirimkan');
+    try{
+      await launchUrl(url);
+    } catch (e) {
+      Get.snackbar("Error", "Gagal membuka WhatsApp: $e");
+      print("Error launching WhatsApp: $e");
+    }
+  }
+
 }

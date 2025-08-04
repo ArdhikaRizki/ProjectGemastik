@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:project_gemastik/Dashboard/Model/product_model.dart';
 import 'package:project_gemastik/page_koperasi/proses_tawaran/proses_tawaran_contollerl.dart';
 import 'package:project_gemastik/page_koperasi/proses_tawaran/proses_tawaran_model.dart';
-import 'package:project_gemastik/page_petani/catalog_petani/Model_Catalog.dart';
+
 
 class ProductPageController extends GetxController {
   var activeIndex = 0.obs;
@@ -147,11 +146,16 @@ class DetailTawaranView extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 5),
-                          const Text(
-                            "Petani Kacang Tanah",
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
+                          InkWell(
+                            onTap: () {
+                              controllerTawaran.urlWhatsApp(detailTawaran.petani.noTelp);
+                            },
+                            child: Text(
+                              detailTawaran.petani.noTelp,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                         ],

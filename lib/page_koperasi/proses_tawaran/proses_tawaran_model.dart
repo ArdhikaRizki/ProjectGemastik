@@ -31,14 +31,16 @@ class DataPenawaran {
 class DataPetani {
   final String name;
   final String photoUrl;
+  final String noTelp;
 
-  DataPetani({required this.name, required this.photoUrl});
+  DataPetani({required this.name, required this.photoUrl, required this.noTelp});
 
   factory DataPetani.fromSnapshot(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return DataPetani(
       name: data['name'] ?? 'Petani Tidak Dikenal',
       photoUrl: data['urlfoto'] ?? '',
+      noTelp: data['phoneNumber'] ?? '',
     );
   }
 }
