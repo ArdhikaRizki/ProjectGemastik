@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 import 'apply_page_controller.dart';
-
+import 'package:intl/intl.dart';
+import 'image_fullscreen_view.dart';
 
 class Applypageview extends StatelessWidget {
-
   Applypageview({super.key});
-
 
   Widget _buildIndicator(bool isActive) {
     return Container(
@@ -31,7 +30,9 @@ class Applypageview extends StatelessWidget {
     final String desc = args['desc'] ?? 'Tidak ada deskripsi';
     final int harga = args['harga'] ?? 0;
     final List<String> imageUrl = args['imageUrl'] ?? '';
-    final _controller = Get.put(ApplyPageViewController(productId: args['id'] ?? ''));
+    final _controller = Get.put(
+      ApplyPageViewController(productId: args['id'] ?? ''),
+    );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF018241),
@@ -57,11 +58,22 @@ class Applypageview extends StatelessWidget {
                       itemCount: imageUrl.length,
                       itemBuilder: (context, index, realIndex) {
                         final url = imageUrl[index];
-                        return ClipRRect(
-                          child: Image.network(
-                            url,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
+                        return GestureDetector(
+                          onTap: () {
+                            Get.to(
+                              () => ImageFullscreenView(
+                                imageUrls: imageUrl,
+                                initialIndex: index,
+                              ),
+                            );
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.network(
+                              url,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
                           ),
                         );
                       },
@@ -81,12 +93,13 @@ class Applypageview extends StatelessWidget {
                       bottom: 20.0,
                       // Bungkus widget yang perlu update dengan Obx.
                       child: Obx(
-                            () => Row(
+                        () => Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(imageUrl.length, (index) {
                             // Bandingkan dengan nilai dari controller.
                             return _buildIndicator(
-                                index == _controller.activeIndex.value);
+                              index == _controller.activeIndex.value,
+                            );
                           }),
                         ),
                       ),
@@ -106,40 +119,44 @@ class Applypageview extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Rp $harga',
+                    'Rp ${NumberFormat.decimalPattern('id_ID').format(harga)} /kg',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF018241),
                     ),
-                  )
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
               Text(
                 desc,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.black87,
-                ),
+                style: const TextStyle(fontSize: 14, color: Colors.black87),
               ),
               const SizedBox(height: 16),
-              const Text("Daftar Koperasi", style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF018241),
-              ), ),
+              const Text(
+                "Daftar Koperasi",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF018241),
+                ),
+              ),
               const SizedBox(height: 8),
               Obx(() {
                 if (_controller.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator(color: Color(0xFF018241)));
+                  return const Center(
+                    child: CircularProgressIndicator(color: Color(0xFF018241)),
+                  );
                 }
                 if (_controller.cooperativeList.isEmpty) {
-                  return const Center(child: Text('Tidak ada koperasi yang tersedia.'));
+                  return const Center(
+                    child: Text('Tidak ada koperasi yang tersedia.'),
+                  );
                 }
                 return SizedBox(
                   height: 300,
-                  
+
                   child: ListView.builder(
                     padding: const EdgeInsets.all(12.0),
                     itemCount: _controller.cooperativeList.length,
@@ -151,34 +168,54 @@ class Applypageview extends StatelessWidget {
                       return Card(
                         margin: const EdgeInsets.only(bottom: 12.0),
                         child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 16,
+                          ),
                           leading: CircleAvatar(
                             radius: 25,
-                            backgroundImage: (cooperative.urlfoto.isNotEmpty)
-                                ? NetworkImage(cooperative.urlfoto)
-                            // ignore: prefer_const_constructors
-                                : null, // Menghilangkan warning
-                            child: (cooperative.urlfoto.isEmpty) ? const Icon(Icons.business) : null,
+                            backgroundImage:
+                                (cooperative.urlfoto.isNotEmpty)
+                                    ? NetworkImage(cooperative.urlfoto)
+                                    // ignore: prefer_const_constructors
+                                    : null, // Menghilangkan warning
+                            child:
+                                (cooperative.urlfoto.isEmpty)
+                                    ? const Icon(Icons.business)
+                                    : null,
                           ),
-                          title: Text(cooperative.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                          subtitle: Text(cooperative.email, style: const TextStyle(color: Colors.grey)),
+                          title: Text(
+                            cooperative.name,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                            cooperative.email,
+                            style: const TextStyle(color: Colors.grey),
+                          ),
                           // Tampilkan tombol atau teks berdasarkan status tawaran
-                          trailing: hasBeenOffered
-                              ? const Text(
-                            'Sudah Ditawarkan',
-                            style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
-                          )
-                              : ElevatedButton(
-                            onPressed: () => _controller.addPenawaran(cooperative.id),
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              backgroundColor: const Color(0xFF018241),
-                              foregroundColor: Colors.white,
-                            ),
-                            child: const Text('Tawarkan'),
-                          ),
+                          trailing:
+                              hasBeenOffered
+                                  ? const Text(
+                                    'Sudah Ditawarkan',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  )
+                                  : ElevatedButton(
+                                    onPressed:
+                                        () => _controller.addPenawaran(
+                                          cooperative.id,
+                                        ),
+                                    style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      backgroundColor: const Color(0xFF018241),
+                                      foregroundColor: Colors.white,
+                                    ),
+                                    child: const Text('Tawarkan'),
+                                  ),
                         ),
                       );
                     },
@@ -192,4 +229,3 @@ class Applypageview extends StatelessWidget {
     );
   }
 }
-

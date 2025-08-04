@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:project_gemastik/page_koperasi/proses_tawaran/proses_tawaran_contollerl.dart';
 import 'package:project_gemastik/page_koperasi/proses_tawaran/proses_tawaran_model.dart';
-
+import 'package:project_gemastik/page_petani/applying_page/image_fullscreen_view.dart';
+import 'package:intl/intl.dart';
 
 class ProductPageController extends GetxController {
   var activeIndex = 0.obs;
@@ -16,8 +17,6 @@ class ProductPageController extends GetxController {
 class DetailTawaranView extends StatelessWidget {
   DetailTawaranView({super.key});
   DetailTawaran detailTawaran = Get.arguments;
-
-
 
   // Helper method untuk membangun indikator
   Widget _buildIndicator(bool isActive) {
@@ -36,14 +35,16 @@ class DetailTawaranView extends StatelessWidget {
   Widget build(BuildContext context) {
     // Inisialisasi controller menggunakan Get.put().
     final ProductPageController controller = Get.put(ProductPageController());
-    final ProsesTawaranContoller controllerTawaran = Get.find<ProsesTawaranContoller>();
+    final ProsesTawaranContoller controllerTawaran =
+        Get.find<ProsesTawaranContoller>();
     // Halaman sebaiknya mengembalikan Scaffold, bukan MaterialApp.
     return Scaffold(
       appBar: AppBar(
         title: Text(detailTawaran.catalog.name.toUpperCase()),
         backgroundColor: Colors.green,
       ),
-      body: SingleChildScrollView( // Menggunakan SingleChildScrollView agar bisa di-scroll
+      body: SingleChildScrollView(
+        // Menggunakan SingleChildScrollView agar bisa di-scroll
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -53,14 +54,25 @@ class DetailTawaranView extends StatelessWidget {
                   itemCount: detailTawaran.catalog.imageUrl.length,
                   itemBuilder: (context, index, realIndex) {
                     final url = detailTawaran.catalog.imageUrl[index];
-                    return ClipRRect(
-                      borderRadius: const BorderRadius.only(
+                    return GestureDetector(
+                      onTap: () {
+                        Get.to(
+                          () => ImageFullscreenView(
+                            imageUrls: List<String>.from(detailTawaran.catalog.imageUrl),
+                            initialIndex: index,
+                          ),
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(30),
-                          bottomRight: Radius.circular(30)),
-                      child: Image.network(
-                        url,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
+                          bottomRight: Radius.circular(30),
+                        ),
+                        child: Image.network(
+                          url,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
                       ),
                     );
                   },
@@ -80,13 +92,17 @@ class DetailTawaranView extends StatelessWidget {
                   bottom: 20.0,
                   // Bungkus widget yang perlu update dengan Obx.
                   child: Obx(
-                        () => Row(
+                    () => Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(detailTawaran.catalog.imageUrl.length, (index) {
-                        // Bandingkan dengan nilai dari controller.
-                        return _buildIndicator(
-                            index == controller.activeIndex.value);
-                      }),
+                      children: List.generate(
+                        detailTawaran.catalog.imageUrl.length,
+                        (index) {
+                          // Bandingkan dengan nilai dari controller.
+                          return _buildIndicator(
+                            index == controller.activeIndex.value,
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -107,31 +123,28 @@ class DetailTawaranView extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(
-                        "Rp ${detailTawaran.catalog.harga} / Kg",
+                      Text('Rp ${NumberFormat.decimalPattern('id_ID').format(detailTawaran.catalog.harga)} /kg',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.green,
                         ),
                         textAlign: TextAlign.right,
-                      )
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
                   Text(
                     detailTawaran.catalog.desc,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                   const SizedBox(height: 20),
                   Row(
                     children: [
                       CircleAvatar(
                         backgroundImage: NetworkImage(
-                            detailTawaran.petani.photoUrl),
+                          detailTawaran.petani.photoUrl,
+                        ),
                         radius: 50,
                       ),
                       const SizedBox(width: 10),
@@ -148,7 +161,9 @@ class DetailTawaranView extends StatelessWidget {
                           const SizedBox(height: 5),
                           InkWell(
                             onTap: () {
-                              controllerTawaran.urlWhatsApp(detailTawaran.petani.noTelp);
+                              controllerTawaran.urlWhatsApp(
+                                detailTawaran.petani.noTelp,
+                              );
                             },
                             child: Text(
                               detailTawaran.petani.noTelp,
@@ -159,40 +174,45 @@ class DetailTawaranView extends StatelessWidget {
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                        SizedBox(
+                      SizedBox(
                         width: 150,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Action for Reject Offer button
-                              controllerTawaran.rejectOffer(detailTawaran.tawaran.offerId);
-                              Get.back();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Action for Reject Offer button
+                            controllerTawaran.rejectOffer(
+                              detailTawaran.tawaran.offerId,
+                            );
+                            Get.back();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Text("Tolak Tawaran",
-                                style:
-                                TextStyle(fontSize: 16, color: Colors.white)),
+                          ),
+                          child: const Text(
+                            "Tolak Tawaran",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
                         ),
+                      ),
                       const SizedBox(width: 10),
                       SizedBox(
                         width: 150,
                         child: ElevatedButton(
                           onPressed: () {
                             // Action for Accept Offer button
-                            controllerTawaran.acceptOffer(detailTawaran.tawaran.offerId);
+                            controllerTawaran.acceptOffer(
+                              detailTawaran.tawaran.offerId,
+                            );
                             Get.back();
                           },
                           style: ElevatedButton.styleFrom(
@@ -202,10 +222,10 @@ class DetailTawaranView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child:
-                          const Text("Terima Tawaran",
-                              style: TextStyle(
-                                  fontSize: 16, color: Colors.white)),
+                          child: const Text(
+                            "Terima Tawaran",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
                         ),
                       ),
                     ],
@@ -213,17 +233,21 @@ class DetailTawaranView extends StatelessWidget {
                   const SizedBox(height: 10),
                   SizedBox(
                     width: 360,
-                    child: ElevatedButton(onPressed: (){},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Text("Tawar Harga", style:
-                      TextStyle(color: Colors.white, fontSize: 16),)),
-                  )
+                      ),
+                      child: Text(
+                        "Tawar Harga",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

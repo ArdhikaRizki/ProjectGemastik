@@ -6,6 +6,8 @@ import 'package:project_gemastik/page_petani/history_apply/history_view.dart';
 import 'package:project_gemastik/routes/route_names.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'Controller_Catalog.dart';
+import 'package:intl/intl.dart';
+
 
 class View_Catalog extends StatelessWidget {
   const View_Catalog({Key? key}) : super(key: key);
@@ -123,7 +125,7 @@ class View_Catalog extends StatelessWidget {
                               ),
                               SizedBox(height: 10),
                               Text("Deskripsi: ${product.desc}"),
-                              Text("Harga: ${product.harga}"),
+                              Text('Harga: Rp ${NumberFormat.decimalPattern('id_ID').format(product.harga)} /kg',),
                             ],
                           ),
                         ),
@@ -192,7 +194,7 @@ class View_Catalog extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              product.harga.toString(),
+                              'Rp ${NumberFormat.decimalPattern('id_ID').format(product.harga)} /kg',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,

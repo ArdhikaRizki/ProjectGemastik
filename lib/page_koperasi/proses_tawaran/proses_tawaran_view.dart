@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:project_gemastik/page_koperasi/proses_tawaran/proses_tawaran_contollerl.dart';
+import 'package:intl/intl.dart';
 
 import '../detail_tawaran/detail_tawaran_view.dart';
 
@@ -86,7 +87,8 @@ class ProsesTawaranView extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Harga: Rp ${detailedOffer.catalog.harga}',
+                        'Rp ${NumberFormat.decimalPattern('id_ID').format(detailedOffer.catalog.harga)} /kg',
+
                         style: TextStyle(fontSize: 15, color: Colors.grey[700], fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 16),
