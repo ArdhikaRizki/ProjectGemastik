@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'apply_page_controller.dart';
 
@@ -9,7 +8,7 @@ import 'apply_page_controller.dart';
 class Applypageview extends StatelessWidget {
 
   Applypageview({super.key});
-  final _controller = Get.put(ApplyPageViewController());
+
 
   Widget _buildIndicator(bool isActive) {
     return Container(
@@ -32,7 +31,7 @@ class Applypageview extends StatelessWidget {
     final String desc = args['desc'] ?? 'Tidak ada deskripsi';
     final int harga = args['harga'] ?? 0;
     final List<String> imageUrl = args['imageUrl'] ?? '';
-
+    final _controller = Get.put(ApplyPageViewController(productId: args['id'] ?? ''));
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF018241),
@@ -132,58 +131,59 @@ class Applypageview extends StatelessWidget {
               ), ),
               const SizedBox(height: 8),
               Obx(() {
-                // Tampilkan loading indicator saat data sedang diambil
                 if (_controller.isLoading.value) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator(color: Color(0xFF018241)));
                 }
-                // Tampilkan pesan jika tidak ada koperasi yang ditemukan
                 if (_controller.cooperativeList.isEmpty) {
-                  return const Center(child: Text("Tidak ada pengguna dengan peran koperasi."));
+                  return const Center(child: Text('Tidak ada koperasi yang tersedia.'));
                 }
-                // Tampilkan daftar koperasi
-                return Expanded(child: ListView.separated(
-                  itemCount: _controller.cooperativeList.length,
-                  // itemBuilder membangun setiap item (Card)
-                  itemBuilder: (context, index) {
-                    final cooperative = _controller.cooperativeList[index];
-                    return
-                      ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: (cooperative.urlfoto.isNotEmpty)
-                              ? NetworkImage(cooperative.urlfoto)
-                              : null,
-                          child: (cooperative.urlfoto.isEmpty)
-                              ? const Icon(Icons.person)
-                              : null,
-                        ),
-                        title: Text(cooperative.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text(cooperative.email),
-                        trailing: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF018241),
+                return SizedBox(
+                  height: 300,
+                  
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(12.0),
+                    itemCount: _controller.cooperativeList.length,
+                    itemBuilder: (context, index) {
+                      final item = _controller.cooperativeList[index];
+                      final cooperative = item.koperasi;
+                      final hasBeenOffered = item.hasBeenOffered;
+
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 12.0),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          leading: CircleAvatar(
+                            radius: 25,
+                            backgroundImage: (cooperative.urlfoto.isNotEmpty)
+                                ? NetworkImage(cooperative.urlfoto)
+                            // ignore: prefer_const_constructors
+                                : null, // Menghilangkan warning
+                            child: (cooperative.urlfoto.isEmpty) ? const Icon(Icons.business) : null,
                           ),
-                          onPressed: () async {
-                            // Panggil fungsi addPenawaran dari controller
-                            bool success = await _controller.addPenawaran(
-                              args['idPetani'], // ID koperasi
-                              cooperative.id,  // ID produk
-                              args['id'], // ID petani
-                            );
-                            if (success) {
-                              Get.back(); // Kembali ke halaman sebelumnya jika sukses
-                            }
-                          },
-                          child: const Text("Tawar", style: TextStyle(color: Colors.white)),
+                          title: Text(cooperative.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          subtitle: Text(cooperative.email, style: const TextStyle(color: Colors.grey)),
+                          // Tampilkan tombol atau teks berdasarkan status tawaran
+                          trailing: hasBeenOffered
+                              ? const Text(
+                            'Sudah Ditawarkan',
+                            style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+                          )
+                              : ElevatedButton(
+                            onPressed: () => _controller.addPenawaran(cooperative.id),
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              backgroundColor: const Color(0xFF018241),
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text('Tawarkan'),
+                          ),
                         ),
                       );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const Divider(
-                      height: 1, // Tinggi garis
-                      color: Color.fromARGB(255, 224, 224, 224), // Warna garis
-                    );
-                  },
-                ));
+                    },
+                  ),
+                );
               }),
             ],
           ),

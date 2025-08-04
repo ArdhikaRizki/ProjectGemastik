@@ -32,7 +32,7 @@ class HistoryController extends GetxController {
       QuerySnapshot offerSnapshot = await _firestore
           .collection('penawaran')
           .where('IdPetani', isEqualTo: currentUser.uid)
-          .where('status', whereIn: ['accepted', 'rejected'])
+          .where('status', whereIn: ['accepted', 'rejected', 'pending'])
           .get();
 
       List<OfferHistoryModel> detailedOffers = [];

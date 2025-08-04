@@ -41,8 +41,9 @@ class HistoryView extends StatelessWidget {
 
             // Tentukan warna dan teks untuk status
             final bool isAccepted = historyItem.offer.status == 'accepted';
-            final Color statusColor = isAccepted ? Colors.green : Colors.red;
-            final String statusText = isAccepted ? 'Diterima' : 'Ditolak';
+            final bool isRejected = historyItem.offer.status == 'rejected';
+            final Color statusColor = isAccepted ? Colors.green : isRejected ? Colors.red : Colors.lime;
+            final String statusText = isAccepted ? 'Diterima' : isRejected ? 'Ditolak' : 'Proses';
 
             return Card(
               elevation: 2,

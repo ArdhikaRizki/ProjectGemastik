@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:project_gemastik/LoginRegister/UserModel.dart';
 
 class Model_Catalog {
   final String docId; // ID unik dari dokumen di Firestore
@@ -44,4 +45,14 @@ class Model_Catalog {
       'harga': harga, // Nama field diubah menjadi harga
     };
   }
+}
+
+class StatusKoperasi {
+  final UserModel koperasi;
+  final bool hasBeenOffered;
+
+  StatusKoperasi({
+    required this.koperasi,
+    required this.hasBeenOffered,
+  });
 }
