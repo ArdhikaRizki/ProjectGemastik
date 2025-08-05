@@ -5,11 +5,11 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:project_gemastik/LoginRegister/SignInUpController.dart';
-import 'package:project_gemastik/MainScreen.dart';
-import 'package:project_gemastik/routes/route_pages.dart';
-import 'package:project_gemastik/Dashboard/View/dashboard_view.dart';
-import 'LoginRegister/RegisterView.dart';
+import 'package:project_gemastik/features/authtentications/SignInUpController.dart';
+import 'package:project_gemastik/core/navigations/MainScreen.dart';
+import 'package:project_gemastik/core/routes/route_pages.dart';
+import 'package:project_gemastik/features/Dashboard/View/dashboard_view.dart';
+import 'features/authtentications/RegisterView.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
