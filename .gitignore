@@ -65,3 +65,6 @@ build/
 
 # Others
 *.log
+
+# Environment variables
+.env
