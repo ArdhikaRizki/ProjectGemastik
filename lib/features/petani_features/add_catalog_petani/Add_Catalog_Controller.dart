@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../catalog_petani/Controller_Catalog.dart';
 
 class addCatalogController extends GetxController {
@@ -15,8 +15,16 @@ class addCatalogController extends GetxController {
   var selectedImages = <XFile>[].obs;
   var isUploading = false.obs;
   final controllerlistcatalog = Get.find<Controller_Catalog>();
+  var isGeneratingAI = false.obs; // State untuk loading AI
+  String _localPriceData = "";
+  String apiKey = "";
 
-  /// Fungsi untuk memilih BANYAK gambar dari galeri.
+  // @override
+  // void onInit() async {
+  //   super.onInit();
+  //   apiKey = await dotenv.env['OPENAI_API_KEY'] ?? '';
+  //   print('mengambil data apikey');
+  // }
   Future<void> pickMultiImageFromGallery() async {
     final List<XFile> pickedFiles = await picker.pickMultiImage();
     if (pickedFiles.isNotEmpty) {
@@ -225,5 +233,90 @@ class addCatalogController extends GetxController {
       );
     }
 
+  }
+
+  Future<void> generateAIDetails({
+    required String productName,
+    required TextEditingController priceController,
+    required TextEditingController descController,
+  }) async {
+    if (productName.isEmpty) {
+      Get.snackbar("Info", "Silakan masukkan nama produk terlebih dahulu.");
+      return;
+    }
+    try{
+      apiKey = dotenv.env['OPENAI_API_KEY'] ?? '';
+    }catch(e){
+      print("Error saat mengambil data lokal: $e");
+    }
+
+    isGeneratingAI.value = true;
+    const apiUrl = "https://api.openai.com/v1/chat/completions";
+
+    final prompt = """
+    Kamu adalah asisten aplikasi siTani anda bertujuan untuk auto generate harga dan deskripsi product. 
+    sebuah aplikasi yang menguhubungkan antara petani dan market, anda bertugas untuk mengenerate harga pasar sekarang dan deskripsi produk dari petani.
+    jawab dengan format json dengan detail 'harga', 'desc'. Dengan nilai harga diisi tanpa koma dan titik hanya angka lalu untuk generate deskripsi berikan kalimat menarik mengenai produk dari petani
+    $_localPriceData
+    """;
+
+    final body = json.encode({
+      "model": "gpt-4o",
+      "messages": [
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": "generate harga rata rata dan deskripsi untuk harga tanpa ada kata lainya selain value dan untuk deskripsi langsung deskripsi nya saja $productName"}
+      ]
+    });
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $apiKey',
+        },
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(utf8.decode(response.bodyBytes));
+        String contentString = responseData['choices'][0]['message']['content'] as String;
+
+        if (contentString.startsWith("```json")) {
+          contentString = contentString.substring(7);
+        }
+        if (contentString.endsWith("```")) {
+          contentString = contentString.substring(0, contentString.length - 3);
+        }
+        contentString = contentString.trim(); // Menghapus spasi/baris baru yang tidak perlu
+
+        try {
+          final contentJson = json.decode(contentString);
+          final price = contentJson['harga'] as String? ?? '0';
+          final description = contentJson['desc'] as String? ?? 'Deskripsi tidak tersedia.';
+
+          // Update text field controllers
+          priceController.text = price;
+          descController.text = description;
+
+          Get.snackbar("Sukses", "Harga dan deskripsi berhasil dibuat!", backgroundColor: Colors.green, colorText: Colors.white);
+        } catch (e) {
+          // Menangani jika respons AI bukan JSON yang valid setelah dibersihkan
+          Get.snackbar("Error", "Format respons dari AI tidak valid.");
+          print("Error parsing AI content: $e");
+          print("Content yang gagal diparsing: $contentString");
+        }
+
+      } else {
+        final errorData = json.decode(response.body);
+        print('apikey = $apiKey');
+        Get.snackbar("Error", "Gagal mendapatkan data dari AI: ${errorData['error']['message']}");
+
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Terjadi kesalahan: $e");
+    } finally {
+      isGeneratingAI.value = false;
+    }
   }
 }
