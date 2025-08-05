@@ -132,12 +132,24 @@ class addCatalogView extends StatelessWidget {
             Row(
               children: [
                 Expanded(
+                  // --- PERBAIKAN UTAMA ADA DI SINI ---
                   child: TextField(
                     controller: descC,
+                    // 1. maxLines: null membuat field bisa membesar tanpa batas
+                    maxLines: null,
+                    // 2. minLines: 3 memberikan tinggi awal minimal 3 baris
+                    minLines: 3,
+                    // 3. keyboardType: TextInputType.multiline memberikan keyboard yang sesuai
+                    keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
                       hintText: 'Deskripsi Produk',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
                     ),
                   ),
                 ),

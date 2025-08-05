@@ -19,11 +19,12 @@ class addCatalogController extends GetxController {
   String _localPriceData = "";
   String apiKey = "";
 
-  @override
-  void onInit() async {
-    super.onInit();
-    apiKey = await dotenv.env['OPENAI_API_KEY'] ?? '';
-  }
+  // @override
+  // void onInit() async {
+  //   super.onInit();
+  //   apiKey = await dotenv.env['OPENAI_API_KEY'] ?? '';
+  //   print('mengambil data apikey');
+  // }
   Future<void> pickMultiImageFromGallery() async {
     final List<XFile> pickedFiles = await picker.pickMultiImage();
     if (pickedFiles.isNotEmpty) {
@@ -243,6 +244,11 @@ class addCatalogController extends GetxController {
       Get.snackbar("Info", "Silakan masukkan nama produk terlebih dahulu.");
       return;
     }
+    try{
+      apiKey = dotenv.env['OPENAI_API_KEY'] ?? '';
+    }catch(e){
+      print("Error saat mengambil data lokal: $e");
+    }
 
     isGeneratingAI.value = true;
     const apiUrl = "https://api.openai.com/v1/chat/completions";
@@ -250,8 +256,7 @@ class addCatalogController extends GetxController {
     final prompt = """
     Kamu adalah asisten aplikasi siTani anda bertujuan untuk auto generate harga dan deskripsi product. 
     sebuah aplikasi yang menguhubungkan antara petani dan market, anda bertugas untuk mengenerate harga pasar sekarang dan deskripsi produk dari petani.
-    Jawab pertanyaan hanya berdasarkan data berikut: jika user menginput data yang belum tersedia maka anda genereate "0", membiarkan petani menentukan harga sendiri tanpa rekomendasi.
-    jika jawaban tersedia jawab dengan format json dengan detail 'harga', 'desc'. Dengan nilai harga diisi tanpa koma dan titik hanya angka lalu untuk generate deskripsi berikan kalimat menarik untuk produk dari petani tersebut
+    jawab dengan format json dengan detail 'harga', 'desc'. Dengan nilai harga diisi tanpa koma dan titik hanya angka lalu untuk generate deskripsi berikan kalimat menarik mengenai produk dari petani
     $_localPriceData
     """;
 
@@ -304,7 +309,9 @@ class addCatalogController extends GetxController {
 
       } else {
         final errorData = json.decode(response.body);
+        print('apikey = $apiKey');
         Get.snackbar("Error", "Gagal mendapatkan data dari AI: ${errorData['error']['message']}");
+
       }
     } catch (e) {
       Get.snackbar("Error", "Terjadi kesalahan: $e");
