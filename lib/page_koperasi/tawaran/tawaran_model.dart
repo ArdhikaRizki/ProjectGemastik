@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DataPenawaran {
+class TawaranModel {
   final String offerId;
   final String idKoperasi;
   final String idPetani;
   final String idProduk;
   final String status;
 
-  DataPenawaran({
+  TawaranModel({
     required this.offerId,
     required this.idKoperasi,
     required this.idPetani,
@@ -15,9 +15,9 @@ class DataPenawaran {
     required this.status,
   });
 
-  factory DataPenawaran.fromSnapshot(DocumentSnapshot doc) {
+  factory TawaranModel.fromSnapshot(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    return DataPenawaran(
+    return TawaranModel(
       offerId: doc.id,
       idKoperasi: data['IdKoperasi'] ?? '',
       idPetani: data['IdPetani'] ?? '',
@@ -70,7 +70,7 @@ class DataCatalog {
 
 // Model gabungan untuk ditampilkan di UI
 class DetailTawaran {
-  final DataPenawaran tawaran;
+  final TawaranModel tawaran;
   final DataPetani petani;
   final DataCatalog catalog;
 

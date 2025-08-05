@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:project_gemastik/page_koperasi/proses_tawaran/proses_tawaran_contollerl.dart';
-import 'package:project_gemastik/page_koperasi/proses_tawaran/proses_tawaran_model.dart';
+import 'package:project_gemastik/page_koperasi/tawaran/tawaran_contoller.dart';
+import 'package:project_gemastik/page_koperasi/tawaran/tawaran_model.dart';
 import 'package:project_gemastik/page_petani/applying_page/image_fullscreen_view.dart';
 import 'package:intl/intl.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:project_gemastik/page_koperasi/detail_tawaran/negosiasi_controller.dart';
 class ProductPageController extends GetxController {
   var activeIndex = 0.obs;
 
@@ -17,9 +18,17 @@ class ProductPageController extends GetxController {
 class DetailTawaranView extends StatelessWidget {
   DetailTawaranView({super.key});
   DetailTawaran detailTawaran = Get.arguments;
+  final TextEditingController _hargaTawarController = TextEditingController();
+  // final hargaController = TextEditingController();
+// final negosiasiController = Get.put(NegosiasiController());
+
 
   // Helper method untuk membangun indikator
   Widget _buildIndicator(bool isActive) {
+    final ProductPageController controller = Get.put(ProductPageController());
+    final TawaranContoller controllerTawaran = Get.find<TawaranContoller>();
+
+    _hargaTawarController.text = detailTawaran.catalog.harga.toString();
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4.0),
       width: isActive ? 12.0 : 8.0,
@@ -35,8 +44,8 @@ class DetailTawaranView extends StatelessWidget {
   Widget build(BuildContext context) {
     // Inisialisasi controller menggunakan Get.put().
     final ProductPageController controller = Get.put(ProductPageController());
-    final ProsesTawaranContoller controllerTawaran =
-        Get.find<ProsesTawaranContoller>();
+    final TawaranContoller controllerTawaran =
+        Get.find<TawaranContoller>();
     // Halaman sebaiknya mengembalikan Scaffold, bukan MaterialApp.
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +67,9 @@ class DetailTawaranView extends StatelessWidget {
                       onTap: () {
                         Get.to(
                           () => ImageFullscreenView(
-                            imageUrls: List<String>.from(detailTawaran.catalog.imageUrl),
+                            imageUrls: List<String>.from(
+                              detailTawaran.catalog.imageUrl,
+                            ),
                             initialIndex: index,
                           ),
                         );
@@ -123,7 +134,8 @@ class DetailTawaranView extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text('Rp ${NumberFormat.decimalPattern('id_ID').format(detailTawaran.catalog.harga)} /kg',
+                      Text(
+                        'Rp ${NumberFormat.decimalPattern('id_ID').format(detailTawaran.catalog.harga)} /kg',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -159,17 +171,35 @@ class DetailTawaranView extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 5),
-                          InkWell(
+                          GestureDetector(
                             onTap: () {
                               controllerTawaran.urlWhatsApp(
                                 detailTawaran.petani.noTelp,
                               );
                             },
-                            child: Text(
-                              detailTawaran.petani.noTelp,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.green.shade50,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.green),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(FontAwesomeIcons.whatsapp, color: Colors.green),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Hubungi Petani',
+                                    style: const TextStyle(
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -234,7 +264,57 @@ class DetailTawaranView extends StatelessWidget {
                   SizedBox(
                     width: 360,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                         Get.dialog(
+                          AlertDialog(
+                            title: const Text('Ajukan Harga Tawar'),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Harga awal dari petani: Rp ${NumberFormat.decimalPattern('id_ID').format(detailTawaran.catalog.harga)} /kg',
+                                ),
+                                const SizedBox(height: 16),
+                                TextFormField(
+                                  controller: _hargaTawarController,
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Harga Tawar Anda (per kg)',
+                                    prefixText: 'Rp ',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Get.back(),
+                                child: const Text('Batal'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  // Ambil harga dan kirim negosiasi
+                                  final newPrice = int.tryParse(_hargaTawarController.text);
+                                  if (newPrice != null && newPrice > 0) {
+                                    controllerTawaran.submitNegotiation(
+                                      detailTawaran.tawaran.offerId,
+                                      newPrice,
+                                    );
+                                  } else {
+                                    Get.snackbar(
+                                      "Input Tidak Valid",
+                                      "Mohon masukkan angka yang benar.",
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white,
+                                    );
+                                  }
+                                },
+                                child: const Text('Kirim Tawaran'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         padding: const EdgeInsets.symmetric(vertical: 12),
