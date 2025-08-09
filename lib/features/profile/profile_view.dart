@@ -92,19 +92,13 @@ class _ProfilePageState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pengaturan Profil')),
+      appBar: AppBar(title: const Text('Pengaturan Profil', style: TextStyle(color: Colors.white),),
+        backgroundColor: const Color(0xFF018241),),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Ubah Biodata Diri',
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 24),
             _buildProfileCard(),
             const SizedBox(height: 24),
             _buildSafeModeSection(),
@@ -214,8 +208,8 @@ class _ProfilePageState extends State<ProfileView> {
             // 2. Refresh the user data on the screen
             await _loadInitialData();
           },
-          icon: const Icon(Icons.photo_camera_outlined),
-          label: const Text('Ubah Foto'),
+          icon: const Icon(Icons.photo_camera_outlined, color: Color(0xFF00AA5B)),
+          label: const Text('Ubah Foto', style:TextStyle(color: Color(0xFF00AA5B), fontWeight: FontWeight.bold) ),
         ),
         const SizedBox(height: 8),
         Text(

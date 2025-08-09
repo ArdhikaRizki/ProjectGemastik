@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import '../authtentications/UserModel.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class profileController extends GetxController {
   XFile? image;
@@ -83,7 +85,7 @@ class profileController extends GetxController {
 
   // PERBAIKAN UTAMA ADA DI SINI
   Future<void> pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery,);
     if (pickedFile != null) {
       if (kIsWeb) {
         _imageBytes = await pickedFile.readAsBytes();
@@ -92,6 +94,16 @@ class profileController extends GetxController {
       // Panggil _uploadImage dan TUNGGU hingga selesai.
       await _uploadImage();
     }
+  }
+
+  Future<XFile?> testCompressAndGetFile(File file, String targetPath) async {
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path, targetPath,
+      quality: 88,
+      rotate: 180,
+    );
+
+    return result;
   }
 
   Future<void> _uploadImage() async {
@@ -106,14 +118,12 @@ class profileController extends GetxController {
       return;
     }
 
-    update(); // Untuk memberitahu listener GetX jika ada
+    update();
 
     var request = http.MultipartRequest(
       'POST',
       Uri.parse("http://147.139.136.133/profileUpload.php"),
     );
-
-
     final fileName = "$userId.jpg";
 
     if (kIsWeb) {

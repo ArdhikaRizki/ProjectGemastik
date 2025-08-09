@@ -134,7 +134,7 @@ class Productpageview extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         backgroundImage: NetworkImage(
-                            'https://assets.promediateknologi.id/crop/0x0:0x0/750x500/webp/photo/2022/11/27/4181532000.jpg'),
+                            'https://as2.ftcdn.net/v2/jpg/02/50/10/17/1000_F_250101768_Qhn6oFRCgQArmI5Ov5EY3EOtYTTHpOg5.jpg'),
                         radius: 50,
                       ),
                       SizedBox(width: 10),
@@ -142,7 +142,7 @@ class Productpageview extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Mas Gibran asal Solo",
+                            "Petani Tes",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

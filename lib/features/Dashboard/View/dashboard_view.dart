@@ -18,7 +18,16 @@ class DashboardView extends StatelessWidget {
 
     // Scaffold dan BottomNav sudah disediakan oleh MainScreen
     return Scaffold(
-      appBar: AppBar(title: const Text('Agri Marketplace')),
+      appBar: AppBar(title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('SiTani', style: TextStyle(color: Colors.white),),
+          Image(image: AssetImage('lib/assets/logo.png'), height: 50, width: 50,),
+        ],
+      ),
+        backgroundColor: Color(0xFF018241),
+        foregroundColor: Colors.white,
+      ),
       body: Obx(() {
         if (controller.productList.isEmpty) {
           return const Center(child: CircularProgressIndicator());
@@ -30,11 +39,11 @@ class DashboardView extends StatelessWidget {
             const SizedBox(height: 24),
             _buildImageSlider(),
             const SizedBox(height: 32),
-            _buildSectionHeader(context, 'Featured Product'),
+            _buildSectionHeader(context, 'Produk Unggulan'),
             const SizedBox(height: 16),
             _buildFeaturedProduct(controller, controller.productList.first),
             const SizedBox(height: 32),
-            _buildSectionHeader(context, 'Popular Items'),
+            _buildSectionHeader(context, 'Produk Populer'),
             const SizedBox(height: 16),
             _buildPopularItems(controller, controller.productList),
           ],
@@ -50,9 +59,9 @@ class DashboardView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Find Fresh Produce', style: Theme.of(context).textTheme.titleLarge),
+          Text('Temukan Produk Segar', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 4),
-          Text('From Our Farms to Your Table', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600])),
+          Text('Dari Pertanian Terbaik Di Indonesia', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600])),
         ],
       ),
     );

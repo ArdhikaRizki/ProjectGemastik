@@ -84,17 +84,17 @@ class MainScreen extends StatelessWidget {
     );
 
     List<BottomNavigationBarItem> itemsPembeli = [
-      const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-      const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+      const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Dashboard'),
+      const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
       // const BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
     ];
     List<BottomNavigationBarItem> itemsPetani = [
-      const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+      const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Dashboard'),
       const BottomNavigationBarItem(
         icon: Icon(Icons.add),
-        label: 'Add Product',
+        label: 'Tambah Produk',
       ),
-      const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+      const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
     ];
 
     List<BottomNavigationBarItem> itemsKoperasi = [
@@ -103,7 +103,7 @@ class MainScreen extends StatelessWidget {
         icon: Icon(Icons.add),
         label: 'Lihat Penawaran',
       ),
-      const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+      const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
     ];
 
     return Scaffold(

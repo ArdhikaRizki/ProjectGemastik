@@ -34,7 +34,7 @@ class addCatalogView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Add Photos', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            const Text('Tambah Foto', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             Obx(() => SizedBox(
               height: 100,

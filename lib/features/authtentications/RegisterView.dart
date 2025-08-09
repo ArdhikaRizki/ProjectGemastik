@@ -12,8 +12,14 @@ class Registerview extends GetView<SignInUpController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Image.asset(
+          'lib/assets/logo.png',
+          height: 100,
+          width: 100,
+        ),
+        centerTitle: true,
         toolbarHeight: 159,
-        backgroundColor: Color.fromRGBO(1, 130, 65, 1.0),
+        backgroundColor: Color(0xFF117f4e),
       ),
       body: Center(
         child: SafeArea(
@@ -36,8 +42,8 @@ class Registerview extends GetView<SignInUpController> {
                             return Colors.transparent;
                           }),
                           tabs: [
-                            Tab(child: Text("Login")),
-                            Tab(child: Text("Register")),
+                            Tab(child: Text("Masuk")),
+                            Tab(child: Text("Daftar")),
                           ],
                         ),
                         // Wrap TabBarView with Expanded
@@ -50,7 +56,7 @@ class Registerview extends GetView<SignInUpController> {
                                   children: [
                                     SizedBox(height: 20),
                                     Text(
-                                      "Sign In",
+                                      "Masuk",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
@@ -70,7 +76,7 @@ class Registerview extends GetView<SignInUpController> {
                                       obscureText: true,
                                       decoration: InputDecoration(
                                         border: OutlineInputBorder(),
-                                        labelText: 'Password',
+                                        labelText: 'Sandi',
                                       ),
                                     ),
                                     SizedBox(height: 20),
@@ -83,7 +89,7 @@ class Registerview extends GetView<SignInUpController> {
                                               loginpasswordC.text,
                                             ),
                                         child: Text(
-                                          "Login",
+                                          "Masuk",
                                           style: TextStyle(color: Colors.white),
                                         ),
                                         style: TextButton.styleFrom(
@@ -111,7 +117,7 @@ class Registerview extends GetView<SignInUpController> {
                                   children: [
                                     SizedBox(height: 20),
                                     Text(
-                                      "Sign Up",
+                                      "Daftar Akun",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20,
@@ -211,7 +217,7 @@ class Registerview extends GetView<SignInUpController> {
                                           }
                                         },
                                         child: Text(
-                                          "Register",
+                                          "Daftar",
                                           style: TextStyle(color: Colors.white),
                                         ),
                                         style: TextButton.styleFrom(

@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -19,24 +21,90 @@ class addCatalogController extends GetxController {
   String _localPriceData = "";
   String apiKey = "";
 
-  // @override
-  // void onInit() async {
-  //   super.onInit();
-  //   apiKey = await dotenv.env['OPENAI_API_KEY'] ?? '';
-  //   print('mengambil data apikey');
-  // }
-  Future<void> pickMultiImageFromGallery() async {
+    Future<void> pickMultiImageFromGallery() async {
     final List<XFile> pickedFiles = await picker.pickMultiImage();
     if (pickedFiles.isNotEmpty) {
-      selectedImages.addAll(pickedFiles);
+      for (var file in pickedFiles) {
+        if (file != null) {
+          File path = File(file.path);
+          print("Picked file: ${file.path}");
+          print("Size gambar sebelum kompresi: ${path.lengthSync()} bytes");
+          // Kompresi gambar jika ukuran file lebih besar dari 1 MB
+          if (path.lengthSync() > 2000000) {
+            selectedImages.add(
+              await compressImageFile(
+                imageFile: path,
+                quality: 80, // Atur kualitas kompresi sesuai kebutuhan
+              ),
+            );
+          } else {
+            selectedImages.add(file);
+          }
+        } else {
+          Get.snackbar(
+            "Error",
+            "Tidak ada gambar yang dipilih.",
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
+      }
     }
   }
 
   Future<void> pickSingleImageFromCamera() async {
     final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    File path = File(pickedFile!.path);
+    print("Picked file: ${pickedFile?.path}");
     if (pickedFile != null) {
-      selectedImages.add(pickedFile);
+      print("Size gambar sebelum kompresi: ${path.lengthSync()} bytes");
+      // Kompresi gambar jika ukuran file lebih besar dari 1 MB
+      if (path.lengthSync() > 2000000) {
+        selectedImages.add(
+          await compressImageFile(
+            imageFile: path,
+            quality: 80, // Atur kualitas kompresi sesuai kebutuhan
+            format: CompressFormat.jpeg, // Atur format kompresi sesuai kebutuhan
+          ),
+        );
+
+      } else {
+        selectedImages.add(pickedFile);
+      }
+    } else {
+      Get.snackbar(
+        "Error",
+        "Tidak ada gambar yang dipilih.",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
+  }
+
+  Future<XFile> compressImageFile(
+      {
+        required File imageFile,
+        int quality = 80,
+        CompressFormat format = CompressFormat.jpeg
+      }) async {
+
+    DateTime time = DateTime.now();
+    final String targetPath = path.join(
+        Directory.systemTemp.path, 'imagetemp-${format.name}-$quality-${time.second}.${format.name}'
+    );
+
+    final XFile? compressedImageFile = await FlutterImageCompress.compressAndGetFile(
+        imageFile.path,
+        targetPath,
+        quality: quality,
+        format: format
+    );
+
+    if (compressedImageFile == null){
+      throw ("Image compression failed! Please try again.");
+    }
+    debugPrint("Compressed image saved to: ${compressedImageFile.path}");
+    return compressedImageFile;
   }
 
   void removeImage(int index) {
@@ -72,7 +140,6 @@ class addCatalogController extends GetxController {
       // Lakukan perulangan untuk setiap gambar yang dipilih
       for (int i = 0; i < selectedImages.length; i++) {
         XFile imageFile = selectedImages[i];
-
         var request = http.MultipartRequest(
           'POST',
           Uri.parse("http://147.139.136.133/itemUpload.php"),
@@ -84,10 +151,12 @@ class addCatalogController extends GetxController {
 
         if (kIsWeb) {
           final bytes = await imageFile.readAsBytes();
+          print("Size gambar setelah kompresi: ${bytes.length} bytes");
           request.files.add(
             http.MultipartFile.fromBytes('image', bytes, filename: fileName),
           );
         } else {
+
           request.files.add(
             await http.MultipartFile.fromPath(
               'image',
@@ -107,6 +176,8 @@ class addCatalogController extends GetxController {
           print("Gambar ${i + 1} berhasil diunggah: $imageUrl");
         } else {
           final responseBody = await response.stream.bytesToString();
+          print("Gagal mengunggah gambar ${i + 1}: error ${response.statusCode}");
+          print("Response body: $responseBody");
           Get.snackbar(
             "Error",
             "Gagal mengunggah gambar ${i + 1}. Pesan: $responseBody",
