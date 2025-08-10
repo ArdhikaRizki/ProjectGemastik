@@ -8,7 +8,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'Controller_Catalog.dart';
 import 'package:intl/intl.dart';
 
-
 class View_Catalog extends StatelessWidget {
   const View_Catalog({Key? key}) : super(key: key);
 
@@ -125,7 +124,9 @@ class View_Catalog extends StatelessWidget {
                               ),
                               SizedBox(height: 10),
                               Text("Deskripsi: ${product.desc}"),
-                              Text('Harga: Rp ${NumberFormat.decimalPattern('id_ID').format(product.harga)} /kg',),
+                              Text(
+                                'Harga: Rp ${NumberFormat.decimalPattern('id_ID').format(product.harga)} /kg',
+                              ),
                             ],
                           ),
                         ),
@@ -207,7 +208,7 @@ class View_Catalog extends StatelessWidget {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       if (Get.isSnackbarOpen) {
-                                        Get.closeCurrentSnackbar();
+                                        // Get.closeCurrentSnackbar();
                                       }
                                       Get.defaultDialog(
                                         title: "Konfirmasi Hapus",
@@ -218,16 +219,15 @@ class View_Catalog extends StatelessWidget {
                                         confirmTextColor: Colors.white,
                                         onConfirm: () async {
                                           Get.back(); // Tutup dialog konfirmasi
-                                          controller
-                                              .deleteProduct(product)
-                                              .then((_) {
-                                                Get.snackbar(
-                                                  "Berhasil",
-                                                  "Produk berhasil dihapus",
-                                                  snackPosition:
-                                                      SnackPosition.TOP,
-                                                );
-                                              });
+                                          controller.deleteProduct(product);
+                                          // .then((_) {
+                                          //   // Get.snackbar(
+                                          //   //   "Berhasil",
+                                          //   //   "Produk berhasil dihapus",
+                                          //   //   snackPosition:
+                                          //   //       SnackPosition.TOP,
+                                          //   // );
+                                          // });
                                         },
                                       );
                                     },
@@ -262,7 +262,7 @@ class View_Catalog extends StatelessWidget {
                                           'imageUrl': product.imageUrl,
                                           'desc': product.desc,
                                           'harga': product.harga,
-                                          'idPetani' : product.uid
+                                          'idPetani': product.uid,
                                         },
                                       );
                                       // Logika untuk mengarahkan ke halaman apply

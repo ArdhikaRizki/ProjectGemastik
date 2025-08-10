@@ -296,12 +296,12 @@ class addCatalogController extends GetxController {
     if (isSuccess) {
       controllerlistcatalog.fetchCatalog();
       Get.back();
-      Get.snackbar(
-        "Sukses",
-        "Produk '$name' berhasil ditambahkan!",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      // Get.snackbar(
+      //   "Sukses",
+      //   "Produk '$name' berhasil ditambahkan!",
+      //   backgroundColor: Colors.green,
+      //   colorText: Colors.white,
+      // );
     }
 
   }

@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           print(snapshot);
           return GetMaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Agri Marketplace',
+            title: 'siTani',
             getPages: RoutePages.page,
             // initialRoute: snapshot.data != null ? RouteNames.home : RouteNames.SignInUp,
             home: Obx(() {

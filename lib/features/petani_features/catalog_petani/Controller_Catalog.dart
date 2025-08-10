@@ -46,16 +46,16 @@ class Controller_Catalog extends GetxController {
             final Map<String, dynamic> responseData = json.decode(response.body);
             message.value = "Sukses menghapus Gambar";
             isSuccess.value = responseData['status'] == 'success';
-            if (isSuccess.value) {
-              Get.snackbar(
-                'Sukses',
-                message.value,
-                backgroundColor: Colors.green,
-                colorText: Colors.white,
-              );
-            } else {
-              Get.snackbar('Gagal', message.value, backgroundColor: Colors.orange);
-            }
+            // if (isSuccess.value) {
+            //   Get.snackbar(
+            //     'Sukses',
+            //     message.value,
+            //     backgroundColor: Colors.green,
+            //     colorText: Colors.white,
+            //   );
+            // } else {
+            //   Get.snackbar('Gagal', message.value, backgroundColor: Colors.orange);
+            // }
           } else {
             message.value = 'Error Server: ${response.statusCode}';
             isSuccess.value = false;
@@ -112,7 +112,7 @@ class Controller_Catalog extends GetxController {
     print("Produk berhasil diambil: ${productList.length} item");
   } catch (error) {
     print("Error saat mengambil produk: $error");
-    Get.snackbar("Error", "Gagal mengambil data produk.");
+    // Get.snackbar("Error", "Gagal mengambil data produk.");
   } finally {
     isLoading.value = false;
   }
