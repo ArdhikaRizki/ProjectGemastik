@@ -114,6 +114,12 @@ class TawaranContoller extends GetxController {
   }
 
   Future<void> urlWhatsApp(String phoneNumber) async {
-    // ... (kode fungsi ini tidak berubah)
+    Uri url = Uri.parse('https://api.whatsapp.com/send?phone=62${phoneNumber.substring(1)}&text=Halo%20saya%20ingin%20berbicara%20tentang%20tawaran%20yang%20anda%20kirimkan');
+    try{
+      await launchUrl(url);
+    } catch (e) {
+      Get.snackbar("Error", "Gagal membuka WhatsApp: $e");
+      print("Error launching WhatsApp: $e");
+    }
   }
 }
